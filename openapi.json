@@ -1,0 +1,973 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Bread API",
+    "description": "The Bread provides comprehensive cryptocurrency wallet management capabilities including wallet creation, balance monitoring, and asset transfers.",
+    "version": "2.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.bread.africa",
+      "description": "Production server"
+    },
+    {
+      "url": "https://processor-v2.up.railway.app",
+      "description": "Staging server for testing"
+    }
+  ],
+  "paths": {
+    "/wallet": {
+      "get": {
+        "tags": ["Wallet"],
+        "summary": "Get wallet",
+        "description": "This endpoint allows you to retrieve a specific wallet by ID.",
+        "operationId": "getWallet",
+        "security": [{"ApiKeyAuth": []}],
+        "parameters": [
+          {
+            "name": "wallet_id",
+            "in": "query",
+            "required": true,
+            "description": "The wallet ID to fetch details for",
+            "schema": {
+              "type": "string",
+              "example": "68bc290df51feea8c53f5275"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Wallet fetched successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetWalletResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Wallet"],
+        "summary": "Create wallet",
+        "description": "This endpoint allows you to create new wallet.",
+        "operationId": "createWallet",
+        "security": [{"ApiKeyAuth": []}],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateWalletRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Wallet created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateWalletResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/wallets": {
+      "get": {
+        "tags": ["Wallet"],
+        "summary": "Get wallets",
+        "description": "This endpoint allows you to retrieve wallets.",
+        "operationId": "listWallets",
+        "security": [{"ApiKeyAuth": []}],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "description": "This is the current page being requested relative to size of a page",
+              "default": 1
+            }
+          },
+          {
+            "name": "wallet_id",
+            "in": "query",
+            "description": "The wallet ID of the exact wallet you want to fetche details for.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Wallets fetched successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/identity": {
+      "post": {
+        "tags": ["Identity"],
+        "summary": "Create identity",
+        "description": "This endpoint allows you to create identity verification.",
+        "operationId": "createIdentity",
+        "security": [{"ApiKeyAuth": []}],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateIdentityRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Identity created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateIdentityResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Identity"],
+        "summary": "Get identity",
+        "description": "This endpoint allows you to retrieve identity details.",
+        "operationId": "getIdentity",
+        "security": [{"ApiKeyAuth": []}],
+        "parameters": [
+          {
+            "name": "identity_id",
+            "in": "query",
+            "required": true,
+            "description": "The identity ID to fetch details for",
+            "schema": {
+              "type": "string",
+              "example": "68bf2de7196a18d7bd165ffb"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Identity fetched successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetIdentityResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/beneficiary": {
+      "post": {
+        "tags": ["Beneficiary"],
+        "summary": "Create beneficiary",
+        "description": "This endpoint allows you to create a beneficiary.",
+        "operationId": "createBeneficiary",
+        "security": [{"ApiKeyAuth": []}],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBeneficiaryRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Beneficiary created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateBeneficiaryResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Beneficiary"],
+        "summary": "Get beneficiary",
+        "description": "This endpoint allows you to retrieve a specific beneficiary by ID.",
+        "operationId": "getBeneficiary",
+        "security": [{"ApiKeyAuth": []}],
+        "parameters": [
+          {
+            "name": "beneficiary_id",
+            "in": "query",
+            "required": true,
+            "description": "The beneficiary ID to fetch details for",
+            "schema": {
+              "type": "string",
+              "example": "68bf2eba196a18d7bd166184"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Beneficiary fetched successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetBeneficiaryResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/beneficiaries": {
+      "get": {
+        "tags": ["Beneficiary"],
+        "summary": "Get beneficiaries",
+        "description": "This endpoint allows you to retrieve beneficiaries.",
+        "operationId": "listBeneficiaries",
+        "security": [{"ApiKeyAuth": []}],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "description": "This is the current page being requested relative to size of a page",
+              "default": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Beneficiaries fetched successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetBeneficiariesResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-service-key"
+      }
+    },
+    "schemas": {
+      "CreateWalletRequest": {
+        "type": "object",
+        "properties": {
+          "reference": {
+            "type": "string",
+            "description": "Unique reference identifier for the wallet",
+            "example": "lt3o4tgb21uay4gye5mgp109fvvkp4"
+          },
+          "offramp": {
+            "type": "boolean",
+            "description": "Whether to automatically offramp incoming deposits.",
+            "example": true
+          },
+          "swap": {
+            "type": "boolean",
+            "description": "Whether to automatically swap incoming deposits.",
+            "example": true
+          },
+          "sweep": {
+            "type": "boolean",
+            "description": "Whether to automatically transfer incoming deposits.",
+            "example": true
+          }
+        }
+      },
+      "CreateWalletResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "example": 201
+          },
+          "message": {
+            "type": "string",
+            "example": "Wallet created successfully"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "reference": {
+                "type": "string",
+                "example": "lt3o4tgb21uay4gye5mgp109fvvkp4"
+              },
+              "wallet_id": {
+                "type": "string",
+                "example": "68bf04ab0752968e34dbfc81"
+              },
+              "address": {
+                "type": "object",
+                "properties": {
+                  "evm": {
+                    "type": "string",
+                    "example": "0x05A0e60459DBeea04fcd8a9354bb201ebc88B676"
+                  },
+                  "svm": {
+                    "type": "string",
+                    "example": "EyueD1zfc5yjjy81umZSCjfSc1KLDmhpQMwrGUvKbsKu"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "ApiResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "example": 200
+          },
+          "message": {
+            "type": "string",
+            "example": "Wallets fetched successfully"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Wallet"
+                }
+              },
+              "total": {
+                "type": "integer",
+                "example": 1
+              },
+              "page": {
+                "type": "integer",
+                "example": 1
+              },
+              "limit": {
+                "type": "integer",
+                "example": 10
+              }
+            }
+          }
+        }
+      },
+      "Wallet": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "68bc290df51feea8c53f5275"
+          },
+          "reference": {
+            "type": "string",
+            "example": "rmb9y5fxuuc7dbb5nsoj0lezd25uls"
+          },
+          "is_active": {
+            "type": "boolean",
+            "example": true
+          },
+          "address": {
+            "type": "object",
+            "properties": {
+              "evm": {
+                "type": "string",
+                "example": "0xf66Dd142c6F15431835f402b0B8a6093C86D7EC2"
+              },
+              "svm": {
+                "type": "string",
+                "example": "F5t8SUAPd7Ebjk6WZvGZbfS2z15RJvZ6LgXZhccwQS93"
+              }
+            }
+          },
+          "sweep": {
+            "type": "boolean",
+            "example": false
+          },
+          "swap": {
+            "type": "boolean",
+            "example": false
+          },
+          "offramp": {
+            "type": "boolean",
+            "example": true
+          },
+          "earn": {
+            "type": "boolean",
+            "example": false
+          }
+        }
+      },
+      "CreateIdentityRequest": {
+        "type": "object",
+        "required": ["type", "name", "details"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["BVN", "NIN", "Link"],
+            "description": "Type of identity verification",
+            "example": "BVN"
+          },
+          "name": {
+            "type": "string",
+            "description": "Full name of the identity holder",
+            "example": "John Doe"
+          },
+          "details": {
+            "type": "object",
+            "description": "Identity details based on type",
+            "oneOf": [
+              {
+                "type": "object",
+                "required": ["bvn", "dob"],
+                "title": "BVN", 
+                "properties": {
+                  "bvn": {
+                    "type": "string",
+                    "description": "Bank Verification Number",
+                    "example": "1234567890"
+                  },
+                  "dob": {
+                    "type": "string",
+                    "description": "Date of birth of the identity holder",
+                    "example": "01-05-1990"
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "required": ["nin", "dob"],
+                "title": "NIN",
+                "properties": {
+                  "nin": {
+                    "type": "string",
+                    "description": "National Identification Number",
+                    "example": "1234567890"
+                  },
+                  "dob": {
+                    "type": "string",
+                    "description": "Date of birth of the identity holder",
+                    "example": "01-05-1990"
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "required": ["email", "name", "country"],
+                "title": "Link",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "description": "User's email address",
+                    "example": "user@example.com"
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "User's full name",
+                    "example": "John Doe"
+                  },
+                  "country": {
+                    "type": "string",
+                    "description": "User's country",
+                    "example": "NG"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      },
+      "CreateIdentityResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "status": {
+            "type": "integer",
+            "example": 201
+          },
+          "message": {
+            "type": "string",
+            "example": "Identity created successfully"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-09-08T19:26:31.532Z"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "example": "68bf2de7196a18d7bd165ffb"
+              },
+              "link": {
+                "type": "string",
+                "nullable": true,
+                "description": "Link URL returned when type is 'link'",
+                "example": null
+              }
+            }
+          }
+        }
+      },
+      "GetWalletResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "status": {
+            "type": "integer",
+            "example": 200
+          },
+          "message": {
+            "type": "string",
+            "example": "Wallet fetched successfully"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-09-08T20:37:46.152Z"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "example": "68bc290df51feea8c53f5275"
+              },
+              "reference": {
+                "type": "string",
+                "example": "rmb9y5fxuuc7dbb5nsoj0lezd25uls"
+              },
+              "is_active": {
+                "type": "boolean",
+                "example": true
+              },
+              "address": {
+                "type": "object",
+                "properties": {
+                  "evm": {
+                    "type": "string",
+                    "example": "0xf66Dd142c6F15431835f402b0B8a6093C86D7EC2"
+                  },
+                  "svm": {
+                    "type": "string",
+                    "example": "F5t8SUAPd7Ebjk6WZvGZbfS2z15RJvZ6LgXZhccwQS93"
+                  }
+                }
+              },
+              "sweep": {
+                "type": "boolean",
+                "example": false
+              },
+              "swap": {
+                "type": "boolean",
+                "example": false
+              },
+              "offramp": {
+                "type": "boolean",
+                "example": true
+              },
+              "earn": {
+                "type": "boolean",
+                "example": false
+              }
+            }
+          }
+        }
+      },
+      "GetIdentityResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "status": {
+            "type": "integer",
+            "example": 200
+          },
+          "message": {
+            "type": "string",
+            "example": "Identity fetched successfully"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-09-08T20:18:48.483Z"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "is_active": {
+                "type": "boolean",
+                "example": true
+              },
+              "id": {
+                "type": "string",
+                "example": "68bf2de7196a18d7bd165ffb"
+              },
+              "type": {
+                "type": "string",
+                "enum": ["bvn", "nin", "link"],
+                "example": "bvn"
+              },
+              "details": {
+                "type": "object",
+                "description": "Identity details based on type",
+                "example": {
+                  "bvn": "22284621397"
+                }
+              }
+            }
+          }
+        }
+      },
+      "CreateBeneficiaryRequest": {
+        "type": "object",
+        "required": ["currency", "identity_id", "details"],
+        "properties": {
+          "currency": {
+            "type": "string",
+            "description": "The currency code for the beneficiary",
+            "example": "ngn"
+          },
+          "identity_id": {
+            "type": "string",
+            "description": "The identity ID associated with this beneficiary",
+            "example": "68bf2de7196a18d7bd165ffb"
+          },
+          "details": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/NigeriaDetails"
+              },
+              {
+                "$ref": "#/components/schemas/CrossBorderDetails"
+              }
+            ],
+            "description": "Banking details based country"
+          }
+        }
+      },
+      "NigeriaDetails": {
+        "type": "object",
+        "title": "Nigerian Bank Account",
+        "required": ["bank_code", "account_number"],
+        "properties": {
+          "bank_code": {
+            "type": "string",
+            "description": "Nigerian bank code",
+            "example": "100004"
+          },
+          "account_number": {
+            "type": "string",
+            "description": "Account number",
+            "example": "1234567890"
+          },
+          "account_name": {
+            "type": "string",
+            "description": "Account holder's name",
+            "example": "John Doe"
+          },
+          "bank_name": {
+            "type": "string",
+            "description": "Name of the bank",
+            "example": "Opay"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CrossBorderDetails": {
+        "type": "object",
+        "title": "Other Bank Account",
+        "properties": {
+          "bank_address": {
+            "$ref": "#/components/schemas/BankAddress"
+          },
+          "bank_name": {
+            "type": "string",
+            "description": "Name of the bank",
+            "example": "Chase Bank"
+          },
+          "account_name": {
+            "type": "string",
+            "description": "Account holder's name",
+            "example": "John Doe"
+          },
+          "account_number": {
+            "type": "string",
+            "description": "Account number",
+            "example": "1234567890"
+          },
+          "routing_number": {
+            "type": "string",
+            "description": "Routing number (USA Only)"
+          },
+          "transit_number": {
+            "type": "string",
+            "description": "Transit number (Canada Only)"
+          },
+          "ifsc_code": {
+            "type": "string",
+            "description": "IFSC code (India Only)"
+          },
+          "sort_code": {
+            "type": "string",
+            "description": "Sort code (UK Only)"
+          },
+          "bsb_number": {
+            "type": "string",
+            "description": "BSB number (Australia Only)"
+          },
+          "ncc_number": {
+            "type": "string",
+            "description": "NCC number"
+          },
+          "clabe_number": {
+            "type": "string",
+            "description": "CLABE number (Mexico Only)"
+          },
+          "branch_code": {
+            "type": "string",
+            "description": "Branch code"
+          },
+          "cnaps_code": {
+            "type": "string",
+            "description": "CNAPS code (China Only)"
+          },
+          "clearing_code": {
+            "type": "string",
+            "description": "Clearing code (Hong Kong Only)"
+          },
+          "pix_code": {
+            "type": "string",
+            "description": "PIX code (Brazil Only)"
+          },
+          "iban": {
+            "type": "string",
+            "description": "IBAN (Europe Only)"
+          },
+          "swift_code": {
+            "type": "string",
+            "description": "SWIFT/BIC (Europe Only)"
+          }
+        },
+        "additionalProperties": false
+      },
+      "BankAddress": {
+        "type": "object",
+        "required": ["house_no", "street", "city", "state", "postal_code", "country"],
+        "properties": {
+          "house_no": {
+            "type": "number",
+            "description": "House number",
+            "example": 123
+          },
+          "street": {
+            "type": "string",
+            "description": "Street name",
+            "example": "Main Street"
+          },
+          "city": {
+            "type": "string",
+            "description": "City name",
+            "example": "Lagos"
+          },
+          "state": {
+            "type": "string",
+            "description": "State or province",
+            "example": "Lagos State"
+          },
+          "postal_code": {
+            "type": "string",
+            "description": "Postal or ZIP code",
+            "example": "100001"
+          },
+          "country": {
+            "type": "string",
+            "description": "Country code",
+            "example": "NG"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateBeneficiaryResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "status": {
+            "type": "integer",
+            "example": 201
+          },
+          "message": {
+            "type": "string",
+            "example": "Beneficiary created successfully"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-09-08T20:40:35.538Z"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "example": "68bf2eba196a18d7bd166184"
+              }
+            }
+          }
+        }
+      },
+      "GetBeneficiaryResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "status": {
+            "type": "integer",
+            "example": 200
+          },
+          "message": {
+            "type": "string",
+            "example": "Beneficiary fetched successfully"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-09-08T20:51:58.112Z"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "example": "68bf2eba196a18d7bd166184"
+              },
+              "is_active": {
+                "type": "boolean",
+                "example": true
+              },
+              "currency": {
+                "type": "string",
+                "example": "ngn"
+              },
+              "details": {
+                "type": "object",
+                "description": "Bank account details based country"
+              }
+            }
+          }
+        }
+      },
+      "GetBeneficiariesResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "status": {
+            "type": "integer",
+            "example": 200
+          },
+          "message": {
+            "type": "string",
+            "example": "Beneficiaries fetched successfully"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-09-08T21:16:13.410Z"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "example": "68bf2eba196a18d7bd166184"
+                    },
+                    "is_active": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "currency": {
+                      "type": "string",
+                      "example": "ngn"
+                    },
+                    "details": {
+                      "type": "object",
+                      "description": "Bank account details based country"
+                    }
+                  }
+                }
+              },
+              "total": {
+                "type": "integer",
+                "example": 1
+              },
+              "page": {
+                "type": "integer",
+                "example": 1
+              },
+              "limit": {
+                "type": "integer",
+                "example": 10
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

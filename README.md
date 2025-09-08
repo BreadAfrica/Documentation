@@ -1,44 +1,21 @@
-# Mintlify Starter Kit
+# Bread Documentation
 
-Use the starter kit to get your docs deployed and ready to customize.
+This repository contains the documentation for **Bread**, a universal bridge between cryptocurrency and local currencies that enables seamless transactions between crypto wallets and traditional bank accounts across Africa and beyond.
 
-Click the green **Use this template** button at the top of this repo to copy the Mintlify starter kit. The starter kit contains examples with
+## About Bread
 
-- Guide pages
-- Navigation
-- Customizations
-- API reference pages
-- Use of popular components
+Bread is a stablecoin-powered bridge that solves the fundamental challenge of converting cryptocurrency into local fiat currencies. Whether you're building a fintech app, crypto exchange, or any application that needs to bridge digital assets and traditional banking, Bread provides the infrastructure you need.
 
-**[Follow the full quickstart guide](https://starter.mintlify.com/quickstart)**
+### Key Features
 
-## Development
+- **Universal Coverage**: Support for multiple global currencies with direct bank account settlement
+- **Real-time Processing**: Instant crypto-to-fiat conversions with optimized exchange rates
+- **Enterprise Security**: Bank-grade security with full regulatory compliance and KYC/AML integration
+- **Developer First**: RESTful API with comprehensive documentation, SDKs, and sandbox environment
 
-Install the [Mintlify CLI](https://www.npmjs.com/package/mint) to preview your documentation changes locally. To install, use the following command:
+### Use Cases
 
-```
-npm i -g mint
-```
-
-Run the following command at the root of your documentation, where your `docs.json` is located:
-
-```
-mint dev
-```
-
-View your local preview at `http://localhost:3000`.
-
-## Publishing changes
-
-Install our GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app) to propagate changes from your repo to your deployment. Changes are deployed to production automatically after pushing to the default branch.
-
-## Need help?
-
-### Troubleshooting
-
-- If your dev environment isn't running: Run `mint update` to ensure you have the most recent version of the CLI.
-- If a page loads as a 404: Make sure you are running in a folder with a valid `docs.json`.
-
-### Resources
-- [Mintlify documentation](https://mintlify.com/docs)
-- [Mintlify community](https://mintlify.com/community)
+- **Crypto Exchanges**: Enable users to cash out to local bank accounts
+- **Payment Processors**: Accept crypto payments and settle in fiat
+- **Remittance Services**: Send money from crypto wallets to bank accounts
+- **Fintech Platforms**: Build crypto-enabled financial products

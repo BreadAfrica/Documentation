@@ -1,127 +1,97 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "mint",
-  "name": "Mint Starter Kit",
+ "theme": "maple",
+  "name": "Bread",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#6b39ff",
+    "light": "#6b39ff",
+    "dark": "#6b39ff"
   },
-  "favicon": "/favicon.svg",
+  "description": "Universal bridge between Crypto and local currencies",
+  "appearance": {
+    "default": "light",
+    "strict": true
+  },
+  "favicon": "/favicon.png",
+  "icons": {
+    "library": "lucide"
+  },
+  "eyebrows": "section",
+  "font": {
+    "family": "Inter",
+    "weight": "400"
+  },
   "navigation": {
-    "tabs": [
+    "interaction": {
+      "drilldown": true
+    },
+    "dropdowns": [
       {
-        "tab": "Guides",
+        "dropdown": "Documentation",
+        "icon": "book",
         "groups": [
           {
             "group": "Getting started",
             "pages": [
-              "index",
+              "introduction",
               "quickstart",
-              "development"
+              "currency",
+              "asset"
             ]
           },
           {
-            "group": "Customization",
+            "group": "Guides",
             "pages": [
-              "essentials/settings",
-              "essentials/navigation"
-            ]
-          },
-          {
-            "group": "Writing content",
-            "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/reusable-snippets"
-            ]
-          },
-          {
-            "group": "AI tools",
-            "pages": [
-              "ai-tools/cursor",
-              "ai-tools/claude-code",
-              "ai-tools/windsurf"
+              "wallet",
+              "beneficiary",
+              "account",
+              "offramp",
+              "onramp"
             ]
           }
         ]
       },
       {
-        "tab": "API reference",
+        "dropdown": "API reference",
+        "icon": "terminal",
         "groups": [
           {
-            "group": "API documentation",
-            "pages": [
-              "api-reference/introduction"
-            ]
-          },
-          {
-            "group": "Endpoint examples",
-            "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
-            ]
+            "group": "API reference",
+            "openapi": {
+              "source": "/openapi.json"
+            }
           }
         ]
       }
-    ],
-    "global": {
-      "anchors": [
-        {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
-        },
-        {
-          "anchor": "Community",
-          "href": "https://mintlify.com/community",
-          "icon": "slack"
-        },
-        {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
-        }
-      ]
-    }
+    ]
   },
   "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
+    "light": "/logo_light.svg",
+    "dark": "/logo_dark.svg",
+    "href": "https://docs.bread.africa"
   },
-  "navbar": {
-    "links": [
-      {
-        "label": "Support",
-        "href": "mailto:hi@mintlify.com"
+  "api": {
+    "mdx": {
+      "auth": {
+        "method": "bearer"
       }
-    ],
-    "primary": {
-      "type": "button",
-      "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
     }
   },
-  "contextual": {
-    "options": [
-     "copy",
-     "view",
-     "chatgpt",
-     "claude",
-     "perplexity",
-     "mcp",
-     "cursor",
-     "vscode"
-   ]
+  "navbar": {
+    "primary": {
+      "type": "button",
+      "label": "Get started",
+      "href": "https://bread.africa"
+    }
   },
   "footer": {
     "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
+      "x": "https://x.com/bread_africa",
+      "linkedin": "https://www.linkedin.com/company/bread-africa",
+      "github": "https://github.com/bread-africa"
     }
+  },
+  "thumbnails": {
+    "background": "/images/thumbnail/background.svg"
   }
 }
