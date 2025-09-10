@@ -1,13 +1,323 @@
 ---
 title: "Offramp"
-description: "Meet the next generation of documentation. AI-native, beautiful out-of-the-box, and built for developers."
-icon: "euro"
+description: "Convert cryptocurrency to fiat currency with automatic bank transfers and competitive exchange rates."
+icon: "landmark"
 ---
+
+## Overview
+
+Bread's offramp functionality allows you to seamlessly convert cryptocurrency assets to fiat currency and transfer the funds directly to bank accounts. Whether you need automatic conversions or manual control, Bread provides flexible options to meet your needs.
+
+### Key Features
+
+- **Instant Conversion**: Convert crypto to fiat at competitive exchange rates
+- **Direct Bank Transfer**: Funds are sent directly to beneficiary bank accounts
+- **Automatic Offramp**: Set up wallets to automatically convert incoming deposits
+- **Multi-Asset Support**: Support for USDC, USDT, and CNGN across multiple blockchains
+- **Real-time Rates**: Get live exchange rates before executing transactions
+
+### Supported Assets
+
+Offramp supports USDC, USDT, and CNGN across multiple blockchains. For list of supported assets and their blockchain networks, [Check here](/asset).
+
+### Automatic Offramp
+
+Create wallets that automatically convert incoming crypto to fiat:
+
+```bash
+curl -X POST "https://api.bread.africa/wallet" \
+  -H "x-service-key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+      "offramp": true,
+      "beneficiary_id": "68bf2eba196a18d7bd166184"
+  }'
+```
+
+**How it works:**
+
+1. Any crypto sent to the wallet is automatically detected
+2. The crypto is immediately converted to fiat at current rate
+3. Funds are transferred to the linked beneficiary's bank account
+4. You receive notifications about the completed transaction
+
+### Manual Offramp
+
+For manual control, you can execute offramps on-demand:
+
+<Steps>
+  <Step title="Get Exchange Rate">
+    Check the current offramp rate for your target currency:
+    
+    ```bash
+    curl -X GET "https://api.bread.africa/rate/offramp?currency=NGN" \
+      -H "x-service-key: YOUR_API_KEY"
+    ```
+    
+    Response:
+    ```json
+    {
+      "success": true,
+      "status": 200,
+      "message": "Offramp rate fetched successfully",
+      "data": {
+        "rate": 1515
+      }
+    }
+    ```
+  </Step>
+
+  <Step title="Get Offramp Quote">
+    Get a detailed quote for your offramp transaction:
+    
+    ```bash
+    curl -X POST "https://api.bread.africa/quote/offramp" \
+      -H "x-service-key: YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+          "amount": 1000,
+          "currency": "NGN",
+          "asset": "base:usdc"
+      }'
+    ```
+    
+    Response:
+    ```json
+    {
+      "success": true,
+      "status": 200,
+      "message": "Offramp quote fetched successfully",
+      "data": {
+        "type": "offramp",
+        "fee": 0,
+        "expiry": "2025-09-09T23:00:05.691Z",
+        "currency": "NGN",
+        "rate": 1515,
+        "input_amount": 1000,
+        "output_amount": 1515000
+      }
+    }
+    ```
+  </Step>
+
+  <Step title="Execute Offramp">
+    Execute the offramp transaction:
+    
+    ```bash
+    curl -X POST "https://api.bread.africa/offramp" \
+      -H "x-service-key: YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+          "wallet_id": "68bb7d8399900e253084e6f9",
+          "amount": 100,
+          "beneficiary_id": "68bf2eba196a18d7bd166184",
+          "asset": "base:usdc"
+      }'
+    ```
+    
+    Response:
+    ```json
+    {
+      "success": true,
+      "status": 200,
+      "message": "Offramp initiated successfully",
+      "data": {
+        "reference": "n4ri27oeopl9m5tuzbpe03cmvq4d1j80"
+      }
+    }
+    ```
+  </Step>
+</Steps>
+
+## Prerequisites
+
+Before using offramp functionality, you need:
+
+### 1. Identity Verification
+
+Create an identity for KYC compliance:
+
+```bash
+curl -X POST "https://api.bread.africa/identity" \
+  -H "x-service-key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+      "type": "BVN",
+      "name": "John Doe",
+      "details": {
+          "bvn": "1234567890",
+          "dob": "01-05-1990"
+      }
+  }'
+```
+
+### 2. Beneficiary Account
+
+Create a beneficiary to receive offramp payouts:
+
+```bash
+curl -X POST "https://api.bread.africa/beneficiary" \
+  -H "x-service-key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+      "currency": "NGN",
+      "identity_id": "68bf2de7196a18d7bd165ffb",
+      "details": {
+          "bank_code": "100004",
+          "account_number": "1234567890"
+      }
+  }'
+```
+
+<Tip>
+  Use the `/lookup` endpoint to verify bank account details before creating a
+  beneficiary.
+</Tip>
+
+<Note>
+  More currencies are being added regularly. Contact our team if you need
+  support for a specific currency.
+</Note>
+
+## Integration
+
+<AccordionGroup>
+  <Accordion title="Node.js Example">
+    ```javascript
+    const axios = require('axios');
+
+    class BreadOfframp {
+      constructor(apiKey) {
+        this.apiKey = apiKey;
+        this.baseURL = 'https://api.bread.africa';
+      }
+
+      async getOfframpRate(currency = 'NGN') {
+        const response = await axios.get(`${this.baseURL}/rate/offramp`, {
+          headers: { 'x-service-key': this.apiKey },
+          params: { currency }
+        });
+        return response.data;
+      }
+
+      async getOfframpQuote(amount, currency, asset) {
+        const response = await axios.post(`${this.baseURL}/quote/offramp`, {
+          amount,
+          currency,
+          asset
+        }, {
+          headers: {
+            'x-service-key': this.apiKey,
+            'Content-Type': 'application/json'
+          }
+        });
+        return response.data;
+      }
+
+      async executeOfframp(walletId, amount, beneficiaryId, asset) {
+        const response = await axios.post(`${this.baseURL}/offramp`, {
+          wallet_id: walletId,
+          amount,
+          beneficiary_id: beneficiaryId,
+          asset
+        }, {
+          headers: {
+            'x-service-key': this.apiKey,
+            'Content-Type': 'application/json'
+          }
+        });
+        return response.data;
+      }
+    }
+
+    // Usage
+    const bread = new BreadOfframp('your-api-key');
+
+    // Get current rate
+    const rate = await bread.getOfframpRate('NGN');
+    console.log('Current NGN rate:', rate.data.rate);
+
+    // Execute offramp
+    const result = await bread.executeOfframp(
+      '68bb7d8399900e253084e6f9',
+      100,
+      '68bf2eba196a18d7bd166184',
+      'base:usdc'
+    );
+    console.log('Offramp reference:', result.data.reference);
+    ```
+
+  </Accordion>
+
+  <Accordion title="Python Example">
+    ```python
+    import requests
+
+    class BreadOfframp:
+        def __init__(self, api_key):
+            self.api_key = api_key
+            self.base_url = 'https://api.bread.africa'
+            self.headers = {'x-service-key': api_key}
+
+        def get_offramp_rate(self, currency='NGN'):
+            response = requests.get(
+                f'{self.base_url}/rate/offramp',
+                headers=self.headers,
+                params={'currency': currency}
+            )
+            return response.json()
+
+        def get_offramp_quote(self, amount, currency, asset):
+            response = requests.post(
+                f'{self.base_url}/quote/offramp',
+                headers={**self.headers, 'Content-Type': 'application/json'},
+                json={
+                    'amount': amount,
+                    'currency': currency,
+                    'asset': asset
+                }
+            )
+            return response.json()
+
+        def execute_offramp(self, wallet_id, amount, beneficiary_id, asset):
+            response = requests.post(
+                f'{self.base_url}/offramp',
+                headers={**self.headers, 'Content-Type': 'application/json'},
+                json={
+                    'wallet_id': wallet_id,
+                    'amount': amount,
+                    'beneficiary_id': beneficiary_id,
+                    'asset': asset
+                }
+            )
+            return response.json()
+
+    # Usage
+    bread = BreadOfframp('your-api-key')
+
+    # Get current rate
+    rate = bread.get_offramp_rate('NGN')
+    print(f"Current NGN rate: {rate['data']['rate']}")
+
+    # Execute offramp
+    result = bread.execute_offramp(
+        '68bb7d8399900e253084e6f9',
+        100,
+        '68bf2eba196a18d7bd166184',
+        'base:usdc'
+    )
+    print(f"Offramp reference: {result['data']['reference']}")
+    ```
+
+  </Accordion>
+</AccordionGroup>
 
 ## Need Help?
 
-Our team is here to help you succeed:
+Our team is here to help you succeed with offramp integration:
 
 <Note>
-  **Need help?** Contact our team at [hello@bread.africa](mailto:hello@bread.africa) or [Twitter](https://x.com/UseBreadAfrica).
+  **Need help?** Contact our team at
+  [hello@bread.africa](mailto:hello@bread.africa) or
+  [Twitter](https://x.com/UseBreadAfrica).
 </Note>

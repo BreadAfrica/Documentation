@@ -43,8 +43,6 @@
             "group": "Guides",
             "pages": [
               "wallet",
-              "beneficiary",
-              "account",
               "offramp",
               "onramp"
             ]

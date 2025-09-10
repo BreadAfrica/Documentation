@@ -17,6 +17,35 @@
   ],
   "paths": {
     "/wallet": {
+      "post": {
+        "tags": ["Wallet"],
+        "summary": "Create wallet",
+        "description": "This endpoint allows you to create new wallet.",
+        "operationId": "createWallet",
+        "security": [{"ApiKeyAuth": []}],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateWalletRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Wallet created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateWalletResponse"
+                }
+              }
+            }
+          }
+        }
+      },
       "get": {
         "tags": ["Wallet"],
         "summary": "Get wallet",
@@ -47,30 +76,159 @@
             }
           }
         }
-      },
+      }
+    },
+    "/transfer": {
       "post": {
         "tags": ["Wallet"],
-        "summary": "Create wallet",
-        "description": "This endpoint allows you to create new wallet.",
-        "operationId": "createWallet",
+        "summary": "Transfer",
+        "description": "This endpoint allows you to transfer asset from a wallet.",
+        "operationId": "transferAssets",
         "security": [{"ApiKeyAuth": []}],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateWalletRequest"
+                "$ref": "#/components/schemas/TransferRequest"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Wallet created successfully",
+            "description": "Transfer initiated successfully",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CreateWalletResponse"
+                  "$ref": "#/components/schemas/TransferResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/automate": {
+      "post": {
+        "tags": ["Wallet"],
+        "summary": "Automate",
+        "description": "This endpoint allows you to set automation for a wallet.",
+        "operationId": "automateWallet",
+        "security": [{"ApiKeyAuth": []}],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AutomateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Automation set successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutomateResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/swap": {
+      "post": {
+        "tags": ["Swap"],
+        "summary": "Execute swap",
+        "description": "This endpoint allows you to swap an asset to another.",
+        "operationId": "swapAsset",
+        "security": [{"ApiKeyAuth": []}],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SwapExecuteRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Swap executed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SwapExecuteResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/quote/onramp": {
+      "post": {
+        "tags": ["Onramp"],
+        "summary": "Get quote",
+        "description": "This endpoint allows you to get quote for onramps.",
+        "operationId": "getOnrampQuote",
+        "security": [{"ApiKeyAuth": []}],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OnrampQuoteRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Onramp quote fetched successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OnrampQuoteResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rate/onramp": {
+      "get": {
+        "tags": ["Onramp"],
+        "summary": "Get rate",
+        "description": "This endpoint allows you get onramp rate for a currency.",
+        "operationId": "getOnrampRate",
+        "security": [{"ApiKeyAuth": []}],
+        "parameters": [
+          {
+            "name": "currency",
+            "in": "query",
+            "required": true,
+            "description": "The currency code to get the onramp rate for",
+            "schema": {
+              "type": "string",
+              "enum": ["NGN"],
+              "example": "NGN"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Onramp rate fetched successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OnrampRateResponse"
                 }
               }
             }
@@ -273,6 +431,328 @@
           }
         }
       }
+    },
+    "/banks": {
+      "get": {
+        "tags": ["Miscellaneous"],
+        "summary": "Get banks",
+        "description": "This endpoint allows you to retrieve supported banks.",
+        "operationId": "getBanks",
+        "security": [{"ApiKeyAuth": []}],
+        "parameters": [
+          {
+            "name": "currency",
+            "in": "query",
+            "required": true,
+            "description": "Filter banks by currency code",
+            "schema": {
+              "type": "string",
+              "enum": ["NGN"],
+              "example": "ngn"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Banks fetched successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetBanksResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/assets": {
+      "get": {
+        "tags": ["Miscellaneous"],
+        "summary": "Get assets",
+        "description": "This endpoint allows you to retrieve supported cryptocurrency.",
+        "operationId": "getAssets",
+        "security": [{"ApiKeyAuth": []}],
+        "responses": {
+          "200": {
+            "description": "Assets fetched successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAssetsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/notifications": {
+      "get": {
+        "tags": ["Miscellaneous"],
+        "summary": "Get notifications",
+        "description": "This endpoint allows you to retrieve wallet notifications.",
+        "operationId": "getNotifications",
+        "security": [{"ApiKeyAuth": []}],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "description": "This is the current page being requested relative to size of a page",
+              "default": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Notifications fetched successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetNotificationsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/balance": {
+      "get": {
+        "tags": ["Balance"],
+        "summary": "Get balance",
+        "description": "This endpoint allows you to retrieve the an asset's balance.",
+        "operationId": "getBalance",
+        "security": [{"ApiKeyAuth": []}],
+        "parameters": [
+          {
+            "name": "asset",
+            "in": "query",
+            "required": true,
+            "description": "The asset to get balance for",
+            "schema": {
+              "type": "string",
+              "enum": ["ethereum:usdc", "base:usdc", "arbitrum:usdc", "solana:usdc", "bsc:usdc", "polygon:usdc", "optimism:usdc", "avalanche:usdc", "ethereum:usdt", "arbitrum:usdt", "solana:usdt", "polygon:usdt", "bsc:usdt", "optimism:usdt", "avalanche:usdt", "base:cngn"],
+              "example": "solana:usdc"
+            }
+          },
+          {
+            "name": "wallet_id",
+            "in": "query",
+            "required": true,
+            "description": "The wallet ID to get balance for",
+            "schema": {
+              "type": "string",
+              "example": "68bc290df51feea8c53f5275"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Balance fetched successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetBalanceResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/balances": {
+      "get": {
+        "tags": ["Balance"],
+        "summary": "Get balances",
+        "description": "This endpoint allows you to retrieve all balances for a wallet.",
+        "operationId": "getBalances",
+        "security": [{"ApiKeyAuth": []}],
+        "parameters": [
+          {
+            "name": "wallet_id",
+            "in": "query",
+            "required": true,
+            "description": "The wallet ID to get balances for",
+            "schema": {
+              "type": "string",
+              "example": "68bc290df51feea8c53f5275"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Balances fetched successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetBalancesResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/quote/swap": {
+      "post": {
+        "tags": ["Swap"],
+        "summary": "Get quote",
+        "description": "This endpoint allows you to get quote for swaps.",
+        "operationId": "getSwapQuote",
+        "security": [{"ApiKeyAuth": []}],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SwapQuoteRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Swap quote fetched successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SwapQuoteResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/quote/offramp": {
+      "post": {
+        "tags": ["Offramp"],
+        "summary": "Get quote",
+        "description": "This endpoint allows you to get quote for offramps.",
+        "operationId": "getOfframpQuote",
+        "security": [{"ApiKeyAuth": []}],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OfframpQuoteRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Offramp quote fetched successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfframpQuoteResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/offramp": {
+      "post": {
+        "tags": ["Offramp"],
+        "summary": "Execute offramp",
+        "description": "This endpoint allows you to execute an offramp.",
+        "operationId": "executeOfframp",
+        "security": [{"ApiKeyAuth": []}],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OfframpRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Offramp initiated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfframpResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rate/offramp": {
+      "get": {
+        "tags": ["Offramp"],
+        "summary": "Get rate",
+        "description": "This endpoint allows you get offramp rate for a currency.",
+        "operationId": "getOfframpRate",
+        "security": [{"ApiKeyAuth": []}],
+        "parameters": [
+          {
+            "name": "currency",
+            "in": "query",
+            "required": true,
+            "description": "The currency code to get the offramp rate for",
+            "schema": {
+              "type": "string",
+              "enum": ["NGN"],
+              "example": "NGN"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Offramp rate fetched successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfframpRateResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/lookup": {
+      "post": {
+        "tags": ["Miscellaneous"],
+        "summary": "Lookup account",
+        "description": "This endpoint allows you to lookup and verify bank account.",
+        "operationId": "lookupAccount",
+        "security": [{"ApiKeyAuth": []}],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LookupAccountRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Bank account lookup successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LookupAccountResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -285,29 +765,101 @@
     },
     "schemas": {
       "CreateWalletRequest": {
-        "type": "object",
-        "properties": {
-          "reference": {
-            "type": "string",
-            "description": "Unique reference identifier for the wallet",
-            "example": "lt3o4tgb21uay4gye5mgp109fvvkp4"
+        "oneOf": [
+          {
+            "type": "object",
+            "title": "Basic",
+            "description": "Basic wallet without any automation, you can make manual operations like transfers, swaps and offrams, balance checks etc. via API calls.",
+            "properties": {
+              "reference": {
+                "type": "string",
+                "description": "Unique reference identifier for the wallet",
+                "example": "lt3o4tgb21uay4gye5mgp109fvvkp4"
+              }
+            }
           },
-          "offramp": {
-            "type": "boolean",
-            "description": "Whether to automatically offramp incoming deposits.",
-            "example": true
+          {
+            "type": "object",
+            "title": "Offramp",
+            "description": "Offramp wallet automatically converts incoming crypto deposits to a local currency specified during beneficiary creation, and based on the current exchange rate on Bread. You can set only one beneficiary for a wallet.",
+            "required": ["beneficiary_id", "offramp"],
+            "properties": {
+              "reference": {
+                "type": "string",
+                "description": "Unique reference identifier for the wallet",
+                "example": "lt3o4tgb21uay4gye5mgp109fvvkp4"
+              },
+              "offramp": {
+                "type": "boolean",
+                "enum": [true],
+                "description": "Whether to automatically offramp incoming deposits. Must be **true**.",
+                "example": true
+              },
+              "beneficiary_id": {
+                "type": "string",
+                "description": "The beneficiary to receive offramp payouts.",
+                "example": "68bf2eba196a18d7bd166184"
+              }
+            }
           },
-          "swap": {
-            "type": "boolean",
-            "description": "Whether to automatically swap incoming deposits.",
-            "example": true
+          {
+            "type": "object",
+            "title": "Sweep",
+            "description": "Sweep wallet automatically transfers incoming crypto deposits to your internal settlement wallet. You can always transfer from the settlement wallet to any external wallet of choice via the transfer API endpoint or dashboard.",
+            "required": ["sweep"],
+            "properties": {
+              "reference": {
+                "type": "string",
+                "description": "Unique reference identifier for the wallet",
+                "example": "lt3o4tgb21uay4gye5mgp109fvvkp4"
+              },
+              "sweep": {
+                "type": "boolean",
+                "enum": [true],
+                "description": "Whether to automatically sweep incoming deposits. Must be **true**.",
+                "example": true
+              }
+            }
           },
-          "sweep": {
-            "type": "boolean",
-            "description": "Whether to automatically transfer incoming deposits.",
-            "example": true
+          {
+            "type": "object",
+            "title": "Swap",
+            "description": "Swap wallet automatically converts incoming crypto deposits to a specific crypto asset. The asset and blockchain to always swap to can be configured via the asset configuration API endpoint or your dashboard.",
+            "required": ["swap"],
+            "properties": {
+              "reference": {
+                "type": "string",
+                "description": "Unique reference identifier for the wallet",
+                "example": "lt3o4tgb21uay4gye5mgp109fvvkp4"
+              },
+              "swap": {
+                "type": "boolean",
+                "enum": [true],
+                "description": "Whether to automatically swap incoming deposits. Must be **true**.",
+                "example": true
+              }
+            }
+          },
+          {
+            "type": "object",
+            "title": "Earn",
+            "description": "Earn wallet automatically deposits the balances into a yield-earning from our yeild providers which earns yeilds daily. These deposited funds can earn as high as 10% APY and are not locked, meaning you can withdraw them anytime.",
+            "required": ["earn"],
+            "properties": {
+              "reference": {
+                "type": "string",
+                "description": "Unique reference identifier for the wallet",
+                "example": "lt3o4tgb21uay4gye5mgp109fvvkp4"
+              },
+              "earn": {
+                "type": "boolean",
+                "enum": [true],
+                "description": "Whether to automatically deposit and earn yeild on balance. Must be **true**.",
+                "example": true
+              }
+            }
           }
-        }
+        ]
       },
       "CreateWalletResponse": {
         "type": "object",
@@ -430,6 +982,153 @@
           }
         }
       },
+      "TransferRequest": {
+        "type": "object",
+        "required": ["wallet_id", "amount", "receiver", "asset"],
+        "properties": {
+          "wallet_id": {
+            "type": "string",
+            "description": "The wallet ID to transfer from",
+            "example": "68bb7d8399900e253084e6f9"
+          },
+          "amount": {
+            "type": "number",
+            "description": "Amount to transfer. \n\nUse **-1** to transfer all available balance.",
+            "example": 100
+          },
+          "receiver": {
+            "type": "string",
+            "description": "The recipient address",
+            "example": "0x4ad21FA456Bb297f505B2718ba87ad63D8a95E6B"
+          },
+          "asset": {
+            "type": "string",
+            "enum": ["ethereum:usdc", "base:usdc", "arbitrum:usdc", "solana:usdc", "bsc:usdc", "polygon:usdc", "optimism:usdc", "avalanche:usdc", "ethereum:usdt", "arbitrum:usdt", "solana:usdt", "polygon:usdt", "bsc:usdt", "optimism:usdt", "avalanche:usdt", "base:cngn"],
+            "description": "The asset to transfer",
+            "example": "bsc:usdt"
+          }
+        }
+      },
+      "TransferResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "status": {
+            "type": "integer",
+            "example": 200
+          },
+          "message": {
+            "type": "string",
+            "example": "Transfer initiated successfully"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-09-09T20:42:10.316Z"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "hash": {
+                "type": "string",
+                "description": "Transaction hash on the blockchain",
+                "example": "0x8e935237667da1a673ea84cdaf1750ef9dddb125e075d20657f38b5223674da8"
+              },
+              "link": {
+                "type": "string",
+                "description": "Link to view the transaction on a blockchain explorer",
+                "example": "https://blockscan.com/tx/0x8e935237667da1a673ea84cdaf1750ef9dddb125e075d20657f38b5223674da8"
+              }
+            }
+          }
+        }
+      },
+      "AutomateRequest": {
+        "type": "object",
+        "required": ["wallet_id"],
+        "properties": {
+          "wallet_id": {
+            "type": "string",
+            "description": "The wallet ID to set automation for",
+            "example": "68bc290df51feea8c53f5275"
+          },
+          "sweep": {
+            "type": "boolean",
+            "description": "Whether to enable automatic sweep",
+            "example": false
+          },
+          "swap": {
+            "type": "boolean",
+            "description": "Whether to enable automatic swap",
+            "example": false
+          },
+          "offramp": {
+            "type": "boolean",
+            "description": "Whether to enable automatic offramp",
+            "example": true
+          },
+          "earn": {
+            "type": "boolean",
+            "description": "Whether to enable automatic earn",
+            "example": false
+          },
+          "beneficiary_id": {
+            "type": "string",
+            "description": "The beneficiary ID for offramp automation. Required when **offramp** is `true`.",
+            "example": "68bf2eba196a18d7bd166184"
+          }
+        }
+      },
+      "AutomateResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "status": {
+            "type": "integer",
+            "example": 200
+          },
+          "message": {
+            "type": "string",
+            "example": "Automation set successfully"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-09-10T00:52:59.708Z"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "sweep": {
+                "type": "boolean",
+                "example": false
+              },
+              "swap": {
+                "type": "boolean",
+                "example": false
+              },
+              "offramp": {
+                "type": "boolean",
+                "example": true
+              },
+              "earn": {
+                "type": "boolean",
+                "example": false
+              },
+              "beneficiary_id": {
+                "type": "string",
+                "example": "68bf2eba196a18d7bd166184"
+              }
+            }
+          }
+        }
+      },
       "CreateIdentityRequest": {
         "type": "object",
         "required": ["type", "name", "details"],
@@ -485,7 +1184,7 @@
               },
               {
                 "type": "object",
-                "required": ["email", "name", "country"],
+                "required": ["email", "country"],
                 "title": "Link",
                 "properties": {
                   "email": {
@@ -493,11 +1192,6 @@
                     "format": "email",
                     "description": "User's email address",
                     "example": "user@example.com"
-                  },
-                  "name": {
-                    "type": "string",
-                    "description": "User's full name",
-                    "example": "John Doe"
                   },
                   "country": {
                     "type": "string",
@@ -668,6 +1362,7 @@
         "properties": {
           "currency": {
             "type": "string",
+            "enum": ["NGN"],
             "description": "The currency code for the beneficiary",
             "example": "ngn"
           },
@@ -703,16 +1398,6 @@
             "type": "string",
             "description": "Account number",
             "example": "1234567890"
-          },
-          "account_name": {
-            "type": "string",
-            "description": "Account holder's name",
-            "example": "John Doe"
-          },
-          "bank_name": {
-            "type": "string",
-            "description": "Name of the bank",
-            "example": "Opay"
           }
         },
         "additionalProperties": false
@@ -899,7 +1584,7 @@
               },
               "details": {
                 "type": "object",
-                "description": "Bank account details based country"
+                "description": "Bank account details based on country"
               }
             }
           }
@@ -947,7 +1632,7 @@
                     },
                     "details": {
                       "type": "object",
-                      "description": "Bank account details based country"
+                      "description": "Bank account details based on country"
                     }
                   }
                 }
@@ -963,6 +1648,923 @@
               "limit": {
                 "type": "integer",
                 "example": 10
+              }
+            }
+          }
+        }
+      },
+      "GetBanksResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "status": {
+            "type": "integer",
+            "example": 200
+          },
+          "message": {
+            "type": "string",
+            "example": "Banks fetched successfully"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-09-09T17:13:01.632Z"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Bank name",
+                  "example": "Access Bank"
+                },
+                "code": {
+                  "type": "string",
+                  "description": "Bank code",
+                  "example": "000014"
+                },
+                "icon": {
+                  "type": "string",
+                  "description": "Bank icon",
+                  "example": "https://api.bread.africa/assets/banks/access-bank.png"
+                }
+              }
+            }
+          }
+        }
+      },
+      "GetAssetsResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "status": {
+            "type": "integer",
+            "example": 200
+          },
+          "message": {
+            "type": "string",
+            "example": "Assets fetched successfully"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-09-09T17:28:20.783Z"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Asset"
+            }
+          }
+        }
+      },
+      "Asset": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the asset",
+            "example": "ethereum:usdc"
+          },
+          "name": {
+            "type": "string",
+            "description": "Full name of the asset",
+            "example": "USD Coin"
+          },
+          "code": {
+            "type": "string",
+            "description": "Asset code/symbol",
+            "example": "USDC"
+          },
+          "address": {
+            "type": "string",
+            "description": "Contract address of the asset on the blockchain",
+            "example": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+          },
+          "blockchain": {
+            "type": "string",
+            "description": "Blockchain network where the asset exists",
+            "example": "Ethereum"
+          }
+        }
+      },
+      "GetNotificationsResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "status": {
+            "type": "integer",
+            "example": 200
+          },
+          "message": {
+            "type": "string",
+            "example": "Notifications fetched successfully"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-09-09T17:30:28.463Z"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Notification"
+                }
+              },
+              "total": {
+                "type": "integer",
+                "example": 33
+              },
+              "page": {
+                "type": "integer",
+                "example": 1
+              },
+              "limit": {
+                "type": "integer",
+                "example": 10
+              }
+            }
+          }
+        }
+      },
+      "Notification": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the notification",
+            "example": "68bdc82c196a18d7bd14d45a"
+          },
+          "asset": {
+            "type": "string",
+            "description": "Unique identifier for the asset",
+            "example": "ethereum:usdc"
+          },
+          "reference": {
+            "type": "string",
+            "description": "Reference identifier for the transaction",
+            "example": "mwGrRUSV4QsGDu36Q6cdEaxy8y0mwGrR"
+          },
+          "wallet": {
+            "type": "string",
+            "description": "Wallet ID associated with the notification",
+            "example": "68bb7d8399900e253084e6f9"
+          },
+          "hash": {
+            "type": "string",
+            "description": "Transaction hash on the blockchain",
+            "example": "56JBvQoxj2fh4aFfDHKuqFMryq4KPjm2oywTu4NnuxtvX7fhGTdweoRx1VfAdxXNQLKe6dN3upAD8ysjt91TkezE"
+          },
+          "sender": {
+            "type": "string",
+            "description": "Sender address",
+            "example": "F5t8SUAPd7Ebjk6WZvGZbfS2z15RJvZ6LgXZhccwQS93"
+          },
+          "direction": {
+            "type": "string",
+            "enum": ["incoming", "outgoing"],
+            "description": "Direction of the transaction",
+            "example": "incoming"
+          },
+          "receiver": {
+            "type": "string",
+            "description": "Receiver address",
+            "example": "DvzLwM5v3gak3gSuMieiYCzN2zzYdMqHS9EXEb78V5jZ"
+          },
+          "amount": {
+            "type": "number",
+            "description": "Transaction amount",
+            "example": 0.5
+          },
+          "fee": {
+            "type": "number",
+            "description": "Transaction fee",
+            "example": 0
+          },
+          "token": {
+            "type": "string",
+            "description": "Token contract address",
+            "example": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+          },
+          "blockchain": {
+            "type": "integer",
+            "description": "Blockchain identifier",
+            "example": 10000
+          },
+          "status": {
+            "type": "string",
+            "enum": ["completed", "pending", "failed"],
+            "description": "Transaction status",
+            "example": "completed"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["deposit", "transfer", "offramp", "swap"],
+            "description": "Type of transaction",
+            "example": "deposit"
+          }
+        }
+      },
+      "GetBalanceResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "status": {
+            "type": "integer",
+            "example": 200
+          },
+          "message": {
+            "type": "string",
+            "example": "Balance fetched successfully"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-09-09T17:36:53.285Z"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Unique identifier for the asset",
+                "example": "solana:usdc"
+              },
+              "name": {
+                "type": "string",
+                "description": "Full name of the asset",
+                "example": "USD Coin"
+              },
+              "code": {
+                "type": "string",
+                "description": "Asset code/symbol",
+                "example": "USDC"
+              },
+              "blockchain": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "description": "Blockchain identifier",
+                    "example": 10000
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "Blockchain name",
+                    "example": "Solana"
+                  }
+                }
+              },
+              "balance": {
+                "type": "number",
+                "description": "Total balance amount",
+                "example": 0
+              },
+              "available": {
+                "type": "number",
+                "description": "Available balance amount",
+                "example": 0
+              },
+              "debt": {
+                "type": "number",
+                "description": "Debt amount",
+                "example": 0
+              }
+            }
+          }
+        }
+      },
+      "GetBalancesResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "status": {
+            "type": "integer",
+            "example": 200
+          },
+          "message": {
+            "type": "string",
+            "example": "Balances fetched successfully"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-09-09T17:42:01.623Z"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique identifier for the asset",
+                  "example": "bsc:usdt"
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Full name of the asset",
+                  "example": "Tether"
+                },
+                "code": {
+                  "type": "string",
+                  "description": "Asset code/symbol",
+                  "example": "USDT"
+                },
+                "blockchain": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer",
+                      "description": "Blockchain identifier",
+                      "example": 56
+                    },
+                    "name": {
+                      "type": "string",
+                      "description": "Blockchain name",
+                      "example": "BNB Chain"
+                    }
+                  }
+                },
+                "balance": {
+                  "type": "number",
+                  "description": "Total balance amount",
+                  "example": 4.5e-17
+                },
+                "available": {
+                  "type": "number",
+                  "description": "Available balance amount",
+                  "example": 4.5e-17
+                },
+                "debt": {
+                  "type": "number",
+                  "description": "Debt amount",
+                  "example": 0
+                }
+              }
+            }
+          }
+        }
+      },
+      "SwapQuoteRequest": {
+        "type": "object",
+        "required": ["wallet_id", "receiver", "from_asset", "to_asset"],
+        "properties": {
+          "wallet_id": {
+            "type": "string",
+            "description": "The wallet ID to swap from",
+            "example": "68bb7d8399900e253084e6f9"
+          },
+          "from_amount": {
+            "type": "number",
+            "description": "Amount to swap. Use **-1** to swap all available balance.\n\nUse this for **EXACT INPUT** swaps.",
+            "example": -1
+          },
+          "to_amount": {
+            "type": "number",
+            "description": "Amount of the `to_asset` you want to receive.\n\nUse this for **EXACT OUTPUT** swaps.",
+            "example": 100
+          },
+          "receiver": {
+            "type": "string",
+            "description": "The recipient address for the swapped assets",
+            "example": "0x4ad21FA456Bb297f505B2718ba87ad63D8a95E6B"
+          },
+          "from_asset": {
+            "type": "string",
+            "enum": ["ethereum:usdc", "base:usdc", "arbitrum:usdc", "solana:usdc", "bsc:usdc", "polygon:usdc", "optimism:usdc", "avalanche:usdc", "ethereum:usdt", "arbitrum:usdt", "solana:usdt", "polygon:usdt", "bsc:usdt", "optimism:usdt", "avalanche:usdt", "base:cngn"],
+            "description": "The asset to swap from",
+            "example": "solana:usdc"
+          },
+          "to_asset": {
+            "type": "string",
+            "enum": ["ethereum:usdc", "base:usdc", "arbitrum:usdc", "solana:usdc", "bsc:usdc", "polygon:usdc", "optimism:usdc", "avalanche:usdc", "ethereum:usdt", "arbitrum:usdt", "solana:usdt", "polygon:usdt", "bsc:usdt", "optimism:usdt", "avalanche:usdt", "base:cngn"],
+            "description": "The asset to swap to",
+            "example": "base:usdc"
+          }
+        }
+      },
+      "SwapExecuteRequest": {
+        "type": "object",
+        "required": ["wallet_id", "receiver", "from_asset", "to_asset"],
+        "properties": {
+          "wallet_id": {
+            "type": "string",
+            "description": "The wallet ID to swap from",
+            "example": "68bb7d8399900e253084e6f9"
+          },
+          "from_amount": {
+            "type": "number",
+            "description": "Amount to swap. Use **-1** to swap all available balance.\n\nUse this for **EXACT INPUT** swaps.",
+            "example": -1
+          },
+          "to_amount": {
+            "type": "number",
+            "description": "Amount of the `to_asset` you want to receive.\n\nUse this for **EXACT OUTPUT** swaps.",
+            "example": 100
+          },
+          "receiver": {
+            "type": "string",
+            "description": "The recipient address for the swapped assets",
+            "example": "0x4ad21FA456Bb297f505B2718ba87ad63D8a95E6B"
+          },
+          "from_asset": {
+            "type": "string",
+            "enum": ["ethereum:usdc", "base:usdc", "arbitrum:usdc", "solana:usdc", "bsc:usdc", "polygon:usdc", "optimism:usdc", "avalanche:usdc", "ethereum:usdt", "arbitrum:usdt", "solana:usdt", "polygon:usdt", "bsc:usdt", "optimism:usdt", "avalanche:usdt", "base:cngn"],
+            "description": "The asset to swap from",
+            "example": "solana:usdc"
+          },
+          "to_asset": {
+            "type": "string",
+            "enum": ["ethereum:usdc", "base:usdc", "arbitrum:usdc", "solana:usdc", "bsc:usdc", "polygon:usdc", "optimism:usdc", "avalanche:usdc", "ethereum:usdt", "arbitrum:usdt", "solana:usdt", "polygon:usdt", "bsc:usdt", "optimism:usdt", "avalanche:usdt", "base:cngn"],
+            "description": "The asset to swap to",
+            "example": "base:usdc"
+          }
+        }
+      },
+      "SwapQuoteResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "status": {
+            "type": "integer",
+            "example": 200
+          },
+          "message": {
+            "type": "string",
+            "example": "Swap quote fetched successfully"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-09-09T21:09:46.572Z"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "input_amount": {
+                "type": "number",
+                "description": "The actual amount that will be swapped from the source asset",
+                "example": 4
+              },
+              "output_amount": {
+                "type": "number",
+                "description": "The expected amount to receive in the target asset",
+                "example": 3.997592
+              },
+              "min_output_amount": {
+                "type": "number",
+                "description": "The minimum amount guaranteed to receive (accounting for slippage)",
+                "example": 3.993592
+              },
+              "price_impact": {
+                "type": "number",
+                "description": "The price impact of the swap as a percentage",
+                "example": 0.06
+              },
+              "duration": {
+                "type": "integer",
+                "description": "Estimated duration of the swap in seconds",
+                "example": 22
+              },
+              "rate": {
+                "type": "number",
+                "description": "Exchange rate between the assets",
+                "example": 0.9993
+              },
+              "input_amount_usd": {
+                "type": "number",
+                "description": "USD value of the input amount",
+                "example": 3.9996
+              },
+              "output_amount_usd": {
+                "type": "number",
+                "description": "USD value of the output amount",
+                "example": 3.9972
+              }
+            }
+          }
+        }
+      },
+      "SwapExecuteResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "status": {
+            "type": "integer",
+            "example": 200
+          },
+          "message": {
+            "type": "string",
+            "example": "Swap executed successfully"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-09-09T20:42:10.316Z"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "hash": {
+                "type": "string",
+                "description": "Transaction hash on the blockchain",
+                "example": "0x8e935237667da1a673ea84cdaf1750ef9dddb125e075d20657f38b5223674da8"
+              },
+              "link": {
+                "type": "string",
+                "description": "Link to view the transaction on a blockchain explorer",
+                "example": "https://blockscan.com/tx/0x8e935237667da1a673ea84cdaf1750ef9dddb125e075d20657f38b5223674da8"
+              }
+            }
+          }
+        }
+      },
+      "OfframpQuoteRequest": {
+        "type": "object",
+        "required": ["amount", "currency", "asset"],
+        "properties": {
+          "amount": {
+            "type": "number",
+            "description": "The amount of asset to offramp",
+            "example": 1000
+          },
+          "currency": {
+            "type": "string",
+            "enum": ["NGN"],
+            "description": "The fiat currency to offramp to",
+            "example": "NGN"
+          },
+          "asset": {
+            "type": "string",
+            "enum": ["ethereum:usdc", "base:usdc", "arbitrum:usdc", "solana:usdc", "bsc:usdc", "polygon:usdc", "optimism:usdc", "avalanche:usdc", "ethereum:usdt", "arbitrum:usdt", "solana:usdt", "polygon:usdt", "bsc:usdt", "optimism:usdt", "avalanche:usdt", "base:cngn"],
+            "description": "The crypto asset to offramp from",
+            "example": "base:usdc"
+          }
+        }
+      },
+      "OnrampQuoteRequest": {
+        "type": "object",
+        "required": ["wallet_id", "amount", "currency", "asset"],
+        "properties": {
+          "amount": {
+            "type": "number",
+            "description": "The fiat amount to to deposit for onramp",
+            "example": 10000
+          },
+          "currency": {
+            "type": "string",
+            "enum": ["NGN"],
+            "description": "The fiat currency to deposit for onramp",
+            "example": "NGN"
+          },
+          "asset": {
+            "type": "string",
+            "enum": ["ethereum:usdc", "base:usdc", "arbitrum:usdc", "solana:usdc", "bsc:usdc", "polygon:usdc", "optimism:usdc", "avalanche:usdc", "ethereum:usdt", "arbitrum:usdt", "solana:usdt", "polygon:usdt", "bsc:usdt", "optimism:usdt", "avalanche:usdt", "base:cngn"],
+            "description": "The crypto asset to receive after onramp",
+            "example": "base:usdc"
+          }
+        }
+      },
+      "OfframpQuoteResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "status": {
+            "type": "integer",
+            "example": 200
+          },
+          "message": {
+            "type": "string",
+            "example": "Offramp quote fetched successfully"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-09-09T22:58:05.691Z"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "description": "Type of quote",
+                "example": "offramp"
+              },
+              "fee": {
+                "type": "number",
+                "description": "Fee amount for the offramp",
+                "example": 0
+              },
+              "expiry": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Quote expiry timestamp",
+                "example": "2025-09-09T23:00:05.691Z"
+              },
+              "currency": {
+                "type": "string",
+                "description": "Target fiat currency code",
+                "example": "NGN"
+              },
+              "rate": {
+                "type": "number",
+                "description": "Exchange rate from crypto to fiat",
+                "example": 1515
+              },
+              "input_amount": {
+                "type": "number",
+                "description": "Input amount in fiat currency",
+                "example": 1000
+              },
+              "output_amount": {
+                "type": "number",
+                "description": "Output amount in fiat currency",
+                "example": 1515000
+              }
+            }
+          }
+        }
+      },
+      "OnrampQuoteResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "status": {
+            "type": "integer",
+            "example": 200
+          },
+          "message": {
+            "type": "string",
+            "example": "Onramp quote fetched successfully"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-09-09T23:00:02.682Z"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "description": "Type of quote",
+                "example": "onramp"
+              },
+              "fee": {
+                "type": "number",
+                "description": "Fee amount for the onramp",
+                "example": 0
+              },
+              "expiry": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Quote expiry timestamp",
+                "example": "2025-09-09T23:02:02.682Z"
+              },
+              "currency": {
+                "type": "string",
+                "description": "Source fiat currency code",
+                "example": "NGN"
+              },
+              "rate": {
+                "type": "number",
+                "description": "Exchange rate from fiat to crypto",
+                "example": 1521
+              },
+              "input_amount": {
+                "type": "number",
+                "description": "Input amount in fiat currency",
+                "example": 10000
+              },
+              "output_amount": {
+                "type": "number",
+                "description": "Output amount in crypto asset",
+                "example": 6.574621959237344
+              }
+            }
+          }
+        }
+      },
+      "OfframpRequest": {
+        "type": "object",
+        "required": ["wallet_id", "amount", "beneficiary_id", "asset"],
+        "properties": {
+          "wallet_id": {
+            "type": "string",
+            "description": "The wallet ID to offramp from",
+            "example": "68bb7d8399900e253084e6f9"
+          },
+          "amount": {
+            "type": "number",
+            "description": "Amount to offramp",
+            "example": 100
+          },
+          "beneficiary_id": {
+            "type": "string",
+            "description": "The beneficiary ID to receive the offramp payout",
+            "example": "68bf2eba196a18d7bd166184"
+          },
+          "asset": {
+            "type": "string",
+            "enum": ["ethereum:usdc", "base:usdc", "arbitrum:usdc", "solana:usdc", "bsc:usdc", "polygon:usdc", "optimism:usdc", "avalanche:usdc", "ethereum:usdt", "arbitrum:usdt", "solana:usdt", "polygon:usdt", "bsc:usdt", "optimism:usdt", "avalanche:usdt", "base:cngn"],
+            "description": "The asset to offramp",
+            "example": "base:usdc"
+          }
+        }
+      },
+      "OfframpResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "status": {
+            "type": "integer",
+            "example": 200
+          },
+          "message": {
+            "type": "string",
+            "example": "Offramp initiated successfully"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-09-09T23:34:20.478Z"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "reference": {
+                "type": "string",
+                "description": "Unique reference identifier for the offramp transaction",
+                "example": "n4ri27oeopl9m5tuzbpe03cmvq4d1j80"
+              }
+            }
+          }
+        }
+      },
+      "LookupAccountRequest": {
+        "type": "object",
+        "required": ["bank_code", "currency", "account_number"],
+        "properties": {
+          "bank_code": {
+            "type": "string",
+            "description": "Bank code for account lookup",
+            "example": "100004"
+          },
+          "currency": {
+            "type": "string",
+            "enum": ["NGN"],
+            "description": "Currency code for the account",
+            "example": "ngn"
+          },
+          "account_number": {
+            "type": "string",
+            "description": "Bank account number to lookup",
+            "example": "1234567890"
+          }
+        }
+      },
+      "LookupAccountResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "status": {
+            "type": "integer",
+            "example": 200
+          },
+          "message": {
+            "type": "string",
+            "example": "Bank account lookup successfully"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-09-10T01:20:03.033Z"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "bank_code": {
+                "type": "string",
+                "description": "Bank code",
+                "example": "100004"
+              },
+              "bank_name": {
+                "type": "string",
+                "description": "Name of the bank",
+                "example": "Opay"
+              },
+              "account_number": {
+                "type": "string",
+                "description": "Account number",
+                "example": "1234567890"
+              },
+              "account_name": {
+                "type": "string",
+                "description": "Account holder's name",
+                "example": "John Doe"
+              }
+            }
+          }
+        }
+      },
+      "OfframpRateResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "status": {
+            "type": "integer",
+            "example": 200
+          },
+          "message": {
+            "type": "string",
+            "example": "Offramp rate fetched successfully"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-09-10T01:34:18.649Z"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "rate": {
+                "type": "number",
+                "description": "The current offramp rate for the specified currency",
+                "example": 1515
+              }
+            }
+          }
+        }
+      },
+      "OnrampRateResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "status": {
+            "type": "integer",
+            "example": 200
+          },
+          "message": {
+            "type": "string",
+            "example": "Onramp rate fetched successfully"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-09-10T01:35:36.935Z"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "rate": {
+                "type": "number",
+                "description": "The current onramp rate for the specified currency",
+                "example": 1521
               }
             }
           }

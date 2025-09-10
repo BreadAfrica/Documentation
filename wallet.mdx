@@ -6,59 +6,374 @@ icon: "wallet"
 
 ## Overview
 
-Bread provides comprehensive cryptocurrency wallet management capabilities. Each wallet supports both EVM (Ethereum Virtual Machine) and SVM (Solana Virtual Machine) networks, giving you access to a wide range of blockchain ecosystems.
+Bread provides comprehensive cryptocurrency wallet management capabilities. Each wallet supports both EVM (Ethereum Virtual Machine) and SVM (Solana Virtual Machine) networks, giving you access to a wide range of blockchain ecosystems with complete automation options.
 
 ### Key Features
 
 - **Multi-chain Support**: Every wallet includes both EVM and SVM addresses
-- **Fully Automated**: Configure automatic offramp, swap, and sweep functionality
+- **Wallet Types**: Basic, Offramp, Sweep, Swap, and Earn wallets for different use cases
+- **Fully Automated**: Configure automatic operations based on incoming deposits
 - **Secure Management**: Enterprise-grade security for wallet creation and management
-- **100% Gasless**: Transactions accross supported chains without worry about gas fees
+- **100% Gasless**: Transactions across supported chains without worrying about gas fees
 
-### Automation
+## Automation
 
-Bread wallets support several automated features:
-
-<CardGroup cols={2}>
-  <Card title="Offramp" icon="refresh-ccw">
-    Automatically convert incoming cryptocurrency deposits to fiat and transfer to bank accounts.
-  </Card>
-  
-  <Card title="Swap" icon="arrow-left-right">
-    Automatically swap incoming deposits to your preferred cryptocurrency assets.
-  </Card>
-  
-  <Card title="Sweep" icon="Send">
-    Automatically transfer incoming deposits to another wallet for centralized management.
-  </Card>
-  
-  <Card title="Earn" icon="piggy-bank">
-    Enable earning interest on your idle assets with DeFi opportunities and as high as 10% APY.
-  </Card>
-</CardGroup>
-
-### Multi-Chain Architecture
-
-Every Bread wallet includes addresses for all major blockchains:
-
-- **EVM Address**: Compatible with Base, and any other EVM chains
-- **SVM Address**: Compatible with Solana, and any other SVM chains
-
-This dual-address system allows your users to receive and manage assets across the most popular blockchains without needing separate wallets.
-
-## Best Practices
+Bread offers various wallets, each designed for specific use cases:
 
 <AccordionGroup>
-  <Accordion title="Reference Management">
-    Use meaningful reference identifiers that map to your internal user or account system. This makes it easier to track and manage wallets across your application.
+  <Accordion title="Basic Wallet">
+    **Use Case**: Manual control over all operations
+    
+    Basic wallets provide full manual control without any automation. Perfect for applications that need to handle transfers, swaps, and offramps programmatically via API calls.
+    
+    ```bash
+    curl -X POST "https://api.bread.africa/wallet" \
+      -H "x-service-key: YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+          "reference": "user-123-basic-wallet"
+      }'
+    ```
+    
+    **Features:**
+    - Manual transfers via API
+    - Manual swaps via API  
+    - Manual offramps via API
+    - Full programmatic control
   </Accordion>
-  
-  <Accordion title="Security Considerations">
-    - Store wallet IDs securely in your database
-    - Never expose wallet passcodes and API keys
-    - Implement proper access controls for wallet operations
-    - Use HTTPS for all API communications
-    - Validate wallet ownership before performing operations
+
+  <Accordion title="Offramp Wallet">
+    **Use Case**: Automatically convert crypto to fiat
+    
+    Offramp wallets automatically convert any incoming cryptocurrency deposits to fiat currency and transfer funds to a specified bank account.
+    
+    ```bash
+    curl -X POST "https://api.bread.africa/wallet" \
+      -H "x-service-key: YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+          "offramp": true,
+          "beneficiary_id": "68bf2eba196a18d7bd166184",
+          "reference": "user-123-offramp-wallet"
+      }'
+    ```
+    
+    **Features:**
+    - Automatic crypto-to-fiat conversion
+    - Direct bank transfers
+    - Real-time exchange rates
+    - Single beneficiary per wallet
+  </Accordion>
+
+  <Accordion title="Sweep Wallet">
+    **Use Case**: Centralized asset management
+    
+    Sweep wallets automatically transfer all incoming deposits to your internal settlement wallet for centralized management.
+    
+    ```bash
+    curl -X POST "https://api.bread.africa/wallet" \
+      -H "x-service-key: YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+          "sweep": true,
+          "reference": "user-123-sweep-wallet"
+      }'
+    ```
+    
+    **Features:**
+    - Automatic asset consolidation
+    - Transfer to settlement wallet
+    - Centralized fund management
+    - Simplified accounting
+  </Accordion>
+
+  <Accordion title="Swap Wallet">
+    **Use Case**: Automatic asset conversion
+    
+    Swap wallets automatically convert incoming deposits to your preferred cryptocurrency asset across different blockchains.
+    
+    ```bash
+    curl -X POST "https://api.bread.africa/wallet" \
+      -H "x-service-key: YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+          "swap": true,
+          "reference": "user-123-swap-wallet"
+      }'
+    ```
+    
+    **Features:**
+    - Automatic crypto-to-crypto conversion
+    - Cross-chain swaps
+    - Configurable target assets
+    - Optimal exchange rates
+    
+    <Note>
+      Target asset configuration is managed via the dashboard or asset configuration API endpoint.
+    </Note>
+  </Accordion>
+
+  <Accordion title="Earn Wallet">
+    **Use Case**: Yield generation on idle assets
+    
+    Earn wallets automatically deposit balances into yield-earning opportunities from DeFi providers, earning up to 10% APY with no lock-up periods.
+    
+    ```bash
+    curl -X POST "https://api.bread.africa/wallet" \
+      -H "x-service-key: YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+          "earn": true,
+          "reference": "user-123-earn-wallet"
+      }'
+    ```
+    
+    **Features:**
+    - Automatic yield farming
+    - Up to 10% APY
+    - No lock-up periods
+    - Instant withdrawals
+    - Daily yield accrual
+  </Accordion>
+</AccordionGroup>
+
+**Response Format:**
+
+```json
+{
+  "success": true,
+  "status": 201,
+  "message": "Wallet created successfully",
+  "timestamp": "2025-09-08T02:03:46.201Z",
+  "data": {
+    "reference": "user-123-basic-wallet",
+    "wallet_id": "68be398168e841ce24c576af",
+    "address": {
+      "evm": "0x77373761e1a69BB6daF15eFb8dD3959BEE34E98D",
+      "svm": "ekKeWZ6x3xDs1sdVQ4KHfZ5Eq5p6UyitHQtCemTtLgn"
+    }
+  }
+}
+```
+
+### Set Automation
+
+Change automation settings for existing wallets:
+
+```bash
+curl -X POST "https://api.bread.africa/automate" \
+  -H "x-service-key: YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+      "wallet_id": "68bc290df51feea8c53f5275",
+      "offramp": true,
+      "beneficiary_id": "68bf2eba196a18d7bd166184",
+      "sweep": false,
+      "swap": false,
+      "earn": false
+  }'
+```
+
+### Supported Assets
+
+Bread supports USDC, USDT, and CNGN across multiple blockchains. For list of supported assets and their blockchain networks, [Check here](/asset).
+
+A dual-address system that allows your users to receive assets across the most popular blockchains without needing separate wallets.
+
+<Tip>
+  You can use `amount: -1` to indicate all available balance of an asset.
+</Tip>
+
+## Integration
+
+<AccordionGroup>
+  <Accordion title="Node.js Example">
+    ```javascript
+    const axios = require('axios');
+
+    class BreadWallet {
+      constructor(apiKey) {
+        this.apiKey = apiKey;
+        this.baseURL = 'https://api.bread.africa';
+        this.headers = {
+          'x-service-key': apiKey,
+          'Content-Type': 'application/json'
+        };
+      }
+
+      async createBasicWallet(reference) {
+        const response = await axios.post(`${this.baseURL}/wallet`, {
+          reference
+        }, { headers: this.headers });
+        return response.data;
+      }
+
+      async createOfframpWallet(beneficiaryId, reference) {
+        const response = await axios.post(`${this.baseURL}/wallet`, {
+          offramp: true,
+          beneficiary_id: beneficiaryId,
+          reference
+        }, { headers: this.headers });
+        return response.data;
+      }
+
+      async getWallet(walletId) {
+        const response = await axios.get(`${this.baseURL}/wallet`, {
+          headers: { 'x-service-key': this.apiKey },
+          params: { wallet_id: walletId }
+        });
+        return response.data;
+      }
+
+      async getWalletBalances(walletId) {
+        const response = await axios.get(`${this.baseURL}/balances`, {
+          headers: { 'x-service-key': this.apiKey },
+          params: { wallet_id: walletId }
+        });
+        return response.data;
+      }
+
+      async transferAssets(walletId, amount, receiver, asset) {
+        const response = await axios.post(`${this.baseURL}/transfer`, {
+          wallet_id: walletId,
+          amount,
+          receiver,
+          asset
+        }, { headers: this.headers });
+        return response.data;
+      }
+
+      async updateAutomation(walletId, automation) {
+        const response = await axios.post(`${this.baseURL}/automate`, {
+          wallet_id: walletId,
+          ...automation
+        }, { headers: this.headers });
+        return response.data;
+      }
+    }
+
+    // Usage example
+    const bread = new BreadWallet('your-api-key');
+
+    // Create different wallet types
+    const basicWallet = await bread.createBasicWallet('user-123-basic');
+    const offrampWallet = await bread.createOfframpWallet(
+      '68bf2eba196a18d7bd166184',
+      'user-123-offramp'
+    );
+
+    // Get wallet info
+    const walletInfo = await bread.getWallet(basicWallet.data.wallet_id);
+
+    // Check balances
+    const balances = await bread.getWalletBalances(basicWallet.data.wallet_id);
+
+    // Transfer assets
+    const transfer = await bread.transferAssets(
+      basicWallet.data.wallet_id,
+      100,
+      '0x4ad21FA456Bb297f505B2718ba87ad63D8a95E6B',
+      'base:usdc'
+    );
+    ```
+
+  </Accordion>
+
+  <Accordion title="Python Example">
+    ```python
+    import requests
+
+    class BreadWallet:
+        def __init__(self, api_key):
+            self.api_key = api_key
+            self.base_url = 'https://api.bread.africa'
+            self.headers = {
+                'x-service-key': api_key,
+                'Content-Type': 'application/json'
+            }
+
+        def create_basic_wallet(self, reference):
+            response = requests.post(
+                f'{self.base_url}/wallet',
+                headers=self.headers,
+                json={'reference': reference}
+            )
+            return response.json()
+
+        def create_offramp_wallet(self, beneficiary_id, reference):
+            response = requests.post(
+                f'{self.base_url}/wallet',
+                headers=self.headers,
+                json={
+                    'offramp': True,
+                    'beneficiary_id': beneficiary_id,
+                    'reference': reference
+                }
+            )
+            return response.json()
+
+        def get_wallet(self, wallet_id):
+            response = requests.get(
+                f'{self.base_url}/wallet',
+                headers={'x-service-key': self.api_key},
+                params={'wallet_id': wallet_id}
+            )
+            return response.json()
+
+        def get_wallet_balances(self, wallet_id):
+            response = requests.get(
+                f'{self.base_url}/balances',
+                headers={'x-service-key': self.api_key},
+                params={'wallet_id': wallet_id}
+            )
+            return response.json()
+
+        def transfer_assets(self, wallet_id, amount, receiver, asset):
+            response = requests.post(
+                f'{self.base_url}/transfer',
+                headers=self.headers,
+                json={
+                    'wallet_id': wallet_id,
+                    'amount': amount,
+                    'receiver': receiver,
+                    'asset': asset
+                }
+            )
+            return response.json()
+
+        def update_automation(self, wallet_id, **automation):
+            response = requests.post(
+                f'{self.base_url}/automate',
+                headers=self.headers,
+                json={'wallet_id': wallet_id, **automation}
+            )
+            return response.json()
+
+    # Usage example
+    bread = BreadWallet('your-api-key')
+
+    # Create different wallet types
+    basic_wallet = bread.create_basic_wallet('user-123-basic')
+    offramp_wallet = bread.create_offramp_wallet(
+        '68bf2eba196a18d7bd166184',
+        'user-123-offramp'
+    )
+
+    # Get wallet info
+    wallet_info = bread.get_wallet(basic_wallet['data']['wallet_id'])
+
+    # Check balances
+    balances = bread.get_wallet_balances(basic_wallet['data']['wallet_id'])
+
+    # Transfer assets
+    transfer = bread.transfer_assets(
+        basic_wallet['data']['wallet_id'],
+        100,
+        '0x4ad21FA456Bb297f505B2718ba87ad63D8a95E6B',
+        'base:usdc'
+    )
+    ```
+
   </Accordion>
 </AccordionGroup>
 
@@ -67,5 +382,7 @@ This dual-address system allows your users to receive and manage assets across t
 Our team is here to help you succeed with wallet integration:
 
 <Note>
-  **Need help?** Contact our team at [hello@bread.africa](mailto:hello@bread.africa) or [Twitter](https://x.com/UseBreadAfrica).
+  **Need help?** Contact our team at
+  [hello@bread.africa](mailto:hello@bread.africa) or
+  [Twitter](https://x.com/UseBreadAfrica).
 </Note>

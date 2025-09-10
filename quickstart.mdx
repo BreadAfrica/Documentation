@@ -26,24 +26,91 @@ icon: "rocket"
   </Accordion>
 </AccordionGroup>
 
-### Step 2: Beneficiary
+### Step 2: Identity
+
+<AccordionGroup>
+  <Accordion icon="id-card" title="Create an identity">
+    Create an identity for KYC verification.
+    
+    **BVN Verification:**
+    ```bash
+    curl -X POST "https://api.bread.africa/identity" \
+      -H "x-service-key: YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+          "type": "BVN",
+          "name": "John Doe",
+          "details": {
+            "bvn": "1234567890",
+            "dob": "01-05-1990"
+          }
+      }'
+    ```
+    
+    **NIN Verification:**
+    ```bash
+    curl -X POST "https://api.bread.africa/identity" \
+      -H "x-service-key: YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+          "type": "NIN",
+          "name": "John Doe",
+          "details": {
+            "nin": "1234567890",
+            "dob": "01-05-1990"
+          }
+      }'
+    ```
+    
+    **Link Verification:**
+    ```bash
+    curl -X POST "https://api.bread.africa/identity" \
+      -H "x-service-key: YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{
+          "type": "Link",
+          "name": "John Doe",
+          "details": {
+            "email": "user@example.com",
+            "name": "John Doe",
+            "country": "NG"
+          }
+      }'
+    ```
+    
+    You should receive a response like:
+    
+    ```json
+    {
+      "success": true,
+      "status": 201,
+      "message": "Identity created successfully",
+      "timestamp": "2025-09-08T19:26:31.532Z",
+      "data": {
+        "id": "68bf2de7196a18d7bd165ffb",
+        "link": null
+      }
+    }
+    ```
+  </Accordion>
+</AccordionGroup>
+
+### Step 3: Beneficiary
 
 <AccordionGroup>
   <Accordion icon="users" title="Create a beneficiary">
-    Create a beneficiary to receive local currency payouts:
+    Create a beneficiary for payouts using an identity.
     
   ```bash
   curl -X POST "https://api.bread.africa/beneficiary" \
     -H "x-service-key: YOUR_API_KEY" \
     -H "Content-Type: application/json" \
     -d '{
-        "currency": "NGN",
-        "identity": 68bf2de7196a18d7bd165ffb,
+        "currency": "ngn",
+        "identity_id": "68bf2de7196a18d7bd165ffb",
         "details": {
-          "account_name": "YOUR_ACCOUNT_NAME",
-          "account_number": "YOUR_ACCOUNT_NUMBER",
-          "bank_name": "YOUR_BANK_NAME",
-          "bank_code": "YOUR_BANK_CODE"
+          "account_number": "1234567890",
+          "bank_code": "100004"
         }
     }'
   ```
@@ -55,27 +122,38 @@ icon: "rocket"
       "success": true,
       "status": 201,
       "message": "Beneficiary created successfully",
-      "timestamp": "2025-09-08T02:22:36.271Z",
+      "timestamp": "2025-09-08T20:40:35.538Z",
       "data": {
-          "id": "68bc26d2196a18d7bd12efcb"
+          "id": "68bf2eba196a18d7bd166184"
       }
     }
     ```
   </Accordion>
 </AccordionGroup>
 
-### Step 3: Wallet
+### Step 4: Wallet
 
-<Accordion icon="wallet" title="Create an offramp wallet">
-  Wallet to receive crypto deposits and auto convert to fiat:
+<Accordion icon="wallet" title="Create a wallet">
+  Create a wallet to receive and manage crypto.
   
+  **Offramp Wallet (auto-converts to fiat):**
   ```bash
   curl -X POST "https://api.bread.africa/wallet" \
     -H "x-service-key: YOUR_API_KEY" \
     -H "Content-Type: application/json" \
     -d '{
         "offramp": true,
-        "beneficiary": "YOUR_BENEFICIARY_ID"
+        "beneficiary_id": "68bf2eba196a18d7bd166184"
+    }'
+  ```
+  
+  **Basic Wallet (Manual operations):**
+  ```bash
+  curl -X POST "https://api.bread.africa/wallet" \
+    -H "x-service-key: YOUR_API_KEY" \
+    -H "Content-Type: application/json" \
+    -d '{
+        "reference": "my-unique-reference"
     }'
   ```
 
