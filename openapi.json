@@ -503,6 +503,15 @@
               "description": "This is the current page being requested relative to size of a page",
               "default": 1
             }
+          },
+          {
+            "name": "wallet_id",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "description": "The wallet ID to get notifications for",
+              "example": "68bc290df51feea8c53f5275"
+            }
           }
         ],
         "responses": {
