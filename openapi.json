@@ -923,7 +923,7 @@
           "data": {
             "type": "object",
             "properties": {
-              "data": {
+              "wallets": {
                 "type": "array",
                 "items": {
                   "$ref": "#/components/schemas/Wallet"
@@ -1622,7 +1622,7 @@
           "data": {
             "type": "object",
             "properties": {
-              "data": {
+              "beneficiaries": {
                 "type": "array",
                 "items": {
                   "type": "object",
@@ -1788,7 +1788,7 @@
           "data": {
             "type": "object",
             "properties": {
-              "data": {
+              "notifications": {
                 "type": "array",
                 "items": {
                   "$ref": "#/components/schemas/Notification"
