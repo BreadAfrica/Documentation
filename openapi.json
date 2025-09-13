@@ -7,12 +7,8 @@
   },
   "servers": [
     {
-      "url": "https://api.bread.africa",
+      "url": "https://processor-prod.up.railway.app",
       "description": "Production server"
-    },
-    {
-      "url": "https://processor-v2.up.railway.app",
-      "description": "Staging server for testing"
     }
   ],
   "paths": {
@@ -725,6 +721,49 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/OfframpRateResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/status/offramp": {
+      "get": {
+        "tags": ["Offramp"],
+        "summary": "Get status",
+        "description": "This endpoint allows you to get the status of an offramp.",
+        "operationId": "getOfframpStatus",
+        "security": [{"ApiKeyAuth": []}],
+        "parameters": [
+          {
+            "name": "wallet_id",
+            "in": "query",
+            "required": true,
+            "description": "The wallet ID to get offramp status for",
+            "schema": {
+              "type": "string",
+              "example": "68bc290df51feea8c53f5275"
+            }
+          },
+          {
+            "name": "reference",
+            "in": "query",
+            "required": false,
+            "description": "The reference of the offramp transaction",
+            "schema": {
+              "type": "string",
+              "example": "rk7fimzmx3r5uvsjwpdx70uz4tjhmeoc"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Offramp status fetched successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfframpStatusResponse"
                 }
               }
             }
@@ -2574,6 +2613,169 @@
                 "type": "number",
                 "description": "The current onramp rate for the specified currency",
                 "example": 1521
+              }
+            }
+          }
+        }
+      },
+      "OfframpStatusResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "status": {
+            "type": "integer",
+            "example": 200
+          },
+          "message": {
+            "type": "string",
+            "example": "Offramp status fetched successfully"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-09-11T21:29:42.416Z"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Unique identifier for the offramp transaction",
+                "example": "68c1b920196a18d7bd1998d6"
+              },
+              "reference": {
+                "type": "string",
+                "description": "Reference identifier for the offramp transaction",
+                "example": "rk7fimzmx3r5uvsjwpdx70uz4tjhmeoc"
+              },
+              "address": {
+                "type": "string",
+                "description": "Address of the offramp wallet",
+                "example": "0x0000000000000000000000000000000000000000"
+              },
+              "blockchain": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "description": "Blockchain identifier",
+                    "example": 8453
+                  },
+                  "icon": {
+                    "type": "string",
+                    "description": "Blockchain icon URL",
+                    "example": "https://i.imgur.com/zvJz8OR.png"
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "Blockchain name",
+                    "example": "Base"
+                  },
+                  "code": {
+                    "type": "string",
+                    "description": "Blockchain code",
+                    "example": "Base"
+                  }
+                }
+              },
+              "token": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Token identifier",
+                    "example": "base:usdc"
+                  },
+                  "icon": {
+                    "type": "string",
+                    "description": "Token icon URL",
+                    "example": "https://i.imgur.com/ilNGZVh.png"
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "Token name",
+                    "example": "USD Coin"
+                  },
+                  "code": {
+                    "type": "string",
+                    "description": "Token code",
+                    "example": "USDC"
+                  }
+                }
+              },
+              "currency": {
+                "type": "object",
+                "properties": {
+                  "icon": {
+                    "type": "string",
+                    "description": "Currency icon URL",
+                    "example": "https://i.imgur.com/RhBMnVC.png"
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "Currency name",
+                    "example": "Nigerian Naira"
+                  },
+                  "code": {
+                    "type": "string",
+                    "description": "Currency code",
+                    "example": "NGN"
+                  }
+                }
+              },
+              "recipient": {
+                "type": "object",
+                "properties": {
+                  "account_name": {
+                    "type": "string",
+                    "description": "Account holder's name",
+                    "example": "John Doe"
+                  },
+                  "account_number": {
+                    "type": "string",
+                    "description": "Account number",
+                    "example": "0123456789"
+                  },
+                  "bank_name": {
+                    "type": "string",
+                    "description": "Bank name",
+                    "example": "Opay"
+                  }
+                }
+              },
+              "from_amount": {
+                "type": "number",
+                "description": "Amount being offramped from crypto",
+                "example": 0.997598
+              },
+              "to_amount": {
+                "type": "string",
+                "description": "Amount being received in fiat currency",
+                "example": "738"
+              },
+              "rate": {
+                "type": "number",
+                "description": "Exchange rate used for the offramp",
+                "example": 1522
+              },
+              "fee": {
+                "type": "number",
+                "description": "Fee charged for the offramp",
+                "example": 0.996600402
+              },
+              "time_to_arrive": {
+                "type": "integer",
+                "description": "Estimated time for funds to arrive (in seconds)",
+                "example": 60
+              },
+              "status": {
+                "type": "string",
+                "enum": ["completed", "pending", "failed", "processing"],
+                "description": "Status of the offramp transaction",
+                "example": "completed"
               }
             }
           }
