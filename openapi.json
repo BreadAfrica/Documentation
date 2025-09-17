@@ -824,9 +824,9 @@
     "/webhook": {
       "post": {
         "tags": ["Notifications"],
-        "summary": "Set webhook",
-        "description": "This endpoint allows you to set or update webhook URL for receiving notifications.",
-        "operationId": "setWebhook",
+        "summary": "Create webhook",
+        "description": "This endpoint allows you to create or update webhook.",
+        "operationId": "createWebhook",
         "security": [{"ApiKeyAuth": []}],
         "requestBody": {
           "required": true,
@@ -840,7 +840,7 @@
         },
         "responses": {
           "200": {
-            "description": "Webhook set successfully",
+            "description": "Webhook created successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -2885,7 +2885,7 @@
           },
           "message": {
             "type": "string",
-            "example": "Webhook set successfully"
+            "example": "Webhook created successfully"
           },
           "timestamp": {
             "type": "string",
