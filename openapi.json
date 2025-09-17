@@ -483,47 +483,6 @@
         }
       }
     },
-    "/notifications": {
-      "get": {
-        "tags": ["Miscellaneous"],
-        "summary": "Get notifications",
-        "description": "This endpoint allows you to retrieve wallet notifications.",
-        "operationId": "getNotifications",
-        "security": [{"ApiKeyAuth": []}],
-        "parameters": [
-          {
-            "name": "page",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "description": "This is the current page being requested relative to size of a page",
-              "default": 1
-            }
-          },
-          {
-            "name": "wallet_id",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "description": "The wallet ID to get notifications for",
-              "example": "68bc290df51feea8c53f5275"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Notifications fetched successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetNotificationsResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/balance": {
       "get": {
         "tags": ["Balance"],
@@ -771,6 +730,66 @@
         }
       }
     },
+    "/notifications": {
+      "get": {
+        "tags": ["Notifications"],
+        "summary": "Get notifications",
+        "description": "This endpoint allows you to retrieve notifications by type for a wallet.",
+        "operationId": "getNotifications",
+        "security": [{"ApiKeyAuth": []}],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "description": "This is the current page being requested relative to size of a page",
+              "default": 1
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "description": "The type of notifications to retrieve",
+            "schema": {
+              "type": "string",
+              "enum": ["transfer", "deposit", "earn", "offramp", "onramp", "swap", "sweep"],
+              "example": "offramp"
+            }
+          },
+          {
+            "name": "wallet_id",
+            "in": "query",
+            "description": "The wallet ID to get notifications for",
+            "schema": {
+              "type": "string",
+              "example": "68c67578e4b64749538d1326"
+            }
+          },
+          {
+            "name": "reference",
+            "in": "query",
+            "description": "The reference of the specific transaction",
+            "schema": {
+              "type": "string",
+              "example": "a6zhamo1neisjcxncmas"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Notifications fetched successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotificationsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/lookup": {
       "post": {
         "tags": ["Miscellaneous"],
@@ -801,6 +820,37 @@
           }
         }
       }
+    },
+    "/webhook": {
+      "post": {
+        "tags": ["Notifications"],
+        "summary": "Set webhook",
+        "description": "This endpoint allows you to set or update webhook URL for receiving notifications.",
+        "operationId": "setWebhook",
+        "security": [{"ApiKeyAuth": []}],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WebhookRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Webhook set successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebhookResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -817,7 +867,7 @@
           {
             "type": "object",
             "title": "Basic",
-            "description": "Basic wallet without any automation, you can make manual operations like transfers, swaps and offrams, balance checks etc. via API calls.",
+            "description": "Basic wallet without any automation, you can make manual operations like transfers, swaps and offramps, balance checks etc. via API calls.",
             "properties": {
               "reference": {
                 "type": "string",
@@ -1804,129 +1854,6 @@
           }
         }
       },
-      "GetNotificationsResponse": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean",
-            "example": true
-          },
-          "status": {
-            "type": "integer",
-            "example": 200
-          },
-          "message": {
-            "type": "string",
-            "example": "Notifications fetched successfully"
-          },
-          "timestamp": {
-            "type": "string",
-            "format": "date-time",
-            "example": "2025-09-09T17:30:28.463Z"
-          },
-          "data": {
-            "type": "object",
-            "properties": {
-              "notifications": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/Notification"
-                }
-              },
-              "total": {
-                "type": "integer",
-                "example": 33
-              },
-              "page": {
-                "type": "integer",
-                "example": 1
-              },
-              "limit": {
-                "type": "integer",
-                "example": 10
-              }
-            }
-          }
-        }
-      },
-      "Notification": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "Unique identifier for the notification",
-            "example": "68bdc82c196a18d7bd14d45a"
-          },
-          "asset": {
-            "type": "string",
-            "description": "Unique identifier for the asset",
-            "example": "ethereum:usdc"
-          },
-          "reference": {
-            "type": "string",
-            "description": "Reference identifier for the transaction",
-            "example": "mwGrRUSV4QsGDu36Q6cdEaxy8y0mwGrR"
-          },
-          "wallet": {
-            "type": "string",
-            "description": "Wallet ID associated with the notification",
-            "example": "68bb7d8399900e253084e6f9"
-          },
-          "hash": {
-            "type": "string",
-            "description": "Transaction hash on the blockchain",
-            "example": "56JBvQoxj2fh4aFfDHKuqFMryq4KPjm2oywTu4NnuxtvX7fhGTdweoRx1VfAdxXNQLKe6dN3upAD8ysjt91TkezE"
-          },
-          "sender": {
-            "type": "string",
-            "description": "Sender address",
-            "example": "F5t8SUAPd7Ebjk6WZvGZbfS2z15RJvZ6LgXZhccwQS93"
-          },
-          "direction": {
-            "type": "string",
-            "enum": ["incoming", "outgoing"],
-            "description": "Direction of the transaction",
-            "example": "incoming"
-          },
-          "receiver": {
-            "type": "string",
-            "description": "Receiver address",
-            "example": "DvzLwM5v3gak3gSuMieiYCzN2zzYdMqHS9EXEb78V5jZ"
-          },
-          "amount": {
-            "type": "number",
-            "description": "Transaction amount",
-            "example": 0.5
-          },
-          "fee": {
-            "type": "number",
-            "description": "Transaction fee",
-            "example": 0
-          },
-          "token": {
-            "type": "string",
-            "description": "Token contract address",
-            "example": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
-          },
-          "blockchain": {
-            "type": "integer",
-            "description": "Blockchain identifier",
-            "example": 10000
-          },
-          "status": {
-            "type": "string",
-            "enum": ["completed", "pending", "failed"],
-            "description": "Transaction status",
-            "example": "completed"
-          },
-          "type": {
-            "type": "string",
-            "enum": ["deposit", "transfer", "offramp", "swap"],
-            "description": "Type of transaction",
-            "example": "deposit"
-          }
-        }
-      },
       "GetBalanceResponse": {
         "type": "object",
         "properties": {
@@ -2057,12 +1984,12 @@
                 "balance": {
                   "type": "number",
                   "description": "Total balance amount",
-                  "example": 4.5e-17
+                  "example": 100
                 },
                 "available": {
                   "type": "number",
                   "description": "Available balance amount",
-                  "example": 4.5e-17
+                  "example": 100
                 },
                 "debt": {
                   "type": "number",
@@ -2776,6 +2703,212 @@
                 "enum": ["completed", "pending", "failed", "processing"],
                 "description": "Status of the offramp transaction",
                 "example": "completed"
+              }
+            }
+          }
+        }
+      },
+      "NotificationsResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "status": {
+            "type": "integer",
+            "example": 200
+          },
+          "message": {
+            "type": "string",
+            "example": "Notifications fetched successfully"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-09-17T00:07:13.436Z"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "notifications": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/NotificationItem"
+                }
+              },
+              "total": {
+                "type": "integer",
+                "example": 9
+              },
+              "page": {
+                "type": "integer",
+                "example": 1
+              },
+              "previous": {
+                "type": "string",
+                "nullable": true,
+                "example": null
+              },
+              "next": {
+                "type": "string",
+                "nullable": true,
+                "example": null
+              },
+              "limit": {
+                "type": "integer",
+                "example": 10
+              }
+            }
+          }
+        }
+      },
+      "NotificationItem": {
+        "type": "object",
+        "properties": {
+          "asset": {
+            "type": "string",
+            "description": "Asset identifier",
+            "example": "bsc:usdt"
+          },
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the notification",
+            "example": "68c9b988196a18d7bd2161cd"
+          },
+          "reference": {
+            "type": "string",
+            "description": "Reference identifier for the transaction",
+            "example": "s7s2ewm5qduwgwz23zpw"
+          },
+          "wallet": {
+            "type": "string",
+            "description": "Wallet ID associated with the notification",
+            "example": "68c67578e4b64749538d1326"
+          },
+          "hash": {
+            "type": "string",
+            "description": "Transaction hash on the blockchain",
+            "example": "0x2a592a8f253e9f404676190d6ee564afa307739549f15175c414ae16030076c6"
+          },
+          "sender": {
+            "type": "string",
+            "description": "Sender address",
+            "example": "0xb8fbc060136580db4732c8e89af6bfc03f4ea229"
+          },
+          "beneficiary": {
+            "type": "string",
+            "description": "Beneficiary ID for offramp transactions",
+            "example": "68c67578196a18d7bd1e4e9b"
+          },
+          "currency": {
+            "type": "string",
+            "description": "Currency code for offramp transactions",
+            "example": "NGN"
+          },
+          "rate": {
+            "type": "number",
+            "description": "Exchange rate used",
+            "example": 1504.98
+          },
+          "direction": {
+            "type": "string",
+            "enum": ["incoming", "outgoing"],
+            "description": "Direction of the transaction",
+            "example": "outgoing"
+          },
+          "receiver": {
+            "type": "string",
+            "description": "Receiver address",
+            "example": "0xb8fbc060136580db4732c8e89af6bfc03f4ea229"
+          },
+          "amount": {
+            "type": "number",
+            "description": "Transaction amount",
+            "example": 70
+          },
+          "fee": {
+            "type": "number",
+            "description": "Transaction fee",
+            "example": 0.35
+          },
+          "token": {
+            "type": "string",
+            "description": "Token contract address",
+            "example": "0x55d398326f99059ff775485246999027b3197955"
+          },
+          "blockchain": {
+            "type": "integer",
+            "description": "Blockchain identifier",
+            "example": 56
+          },
+          "status": {
+            "type": "string",
+            "enum": ["completed", "pending", "failed"],
+            "description": "Transaction status",
+            "example": "completed"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["transfer", "deposit", "earn", "offramp", "onramp", "swap", "sweep"],
+            "description": "Type of transaction",
+            "example": "offramp"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Transaction timestamp",
+            "example": "2025-09-16T19:24:56.425Z"
+          }
+        }
+      },
+      "WebhookRequest": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "The webhook URL to receive notifications. Leave empty to disable.",
+            "example": "https://your-site.com/webhook"
+          }
+        }
+      },
+      "WebhookResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "status": {
+            "type": "integer",
+            "example": 200
+          },
+          "message": {
+            "type": "string",
+            "example": "Webhook set successfully"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-09-17T01:09:23.027Z"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "enabled": {
+                "type": "boolean",
+                "description": "Whether webhook is enabled",
+                "example": true
+              },
+              "url": {
+                "type": "string",
+                "description": "The configured webhook URL",
+                "example": "https://google.com/webhook"
+              },
+              "secret": {
+                "type": "string",
+                "description": "Secret key for webhook verification",
+                "example": "z9o4j778vsn5ivog9beacrvld"
               }
             }
           }
