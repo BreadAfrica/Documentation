@@ -11,7 +11,7 @@ Bread provides comprehensive cryptocurrency wallet management capabilities. Each
 ### Key Features
 
 - **Multi-chain Support**: Every wallet includes both EVM and SVM addresses
-- **Wallet Types**: Basic, Offramp, Sweep, Swap, and Earn wallets for different use cases
+- **Wallet Types**: Basic, Offramp, Transfer and Swap wallets for different use cases
 - **Fully Automated**: Configure automatic operations based on incoming deposits
 - **Secure Management**: Enterprise-grade security for wallet creation and management
 - **100% Gasless**: Transactions across supported chains without worrying about gas fees
@@ -65,18 +65,18 @@ Bread offers various wallets, each designed for specific use cases:
     - Single beneficiary per wallet
   </Accordion>
 
-  <Accordion title="Sweep Wallet">
+  <Accordion title="Transfer Wallet">
     **Use Case**: Centralized asset management
     
-    Sweep wallets automatically transfer all incoming deposits to your internal settlement wallet for centralized management.
+    Transfer wallets automatically transfer all incoming deposits to your internal settlement wallet for centralized management.
     
     ```bash
     curl -X POST "https://api.bread.africa/wallet" \
       -H "x-service-key: YOUR_API_KEY" \
       -H "Content-Type: application/json" \
       -d '{
-          "sweep": true,
-          "reference": "user-123-sweep-wallet"
+          "transfer": true,
+          "reference": "user-123-transfer-wallet"
       }'
     ```
     
@@ -112,29 +112,6 @@ Bread offers various wallets, each designed for specific use cases:
       Target asset configuration is managed via the dashboard or asset configuration API endpoint.
     </Note>
   </Accordion>
-
-  <Accordion title="Earn Wallet">
-    **Use Case**: Yield generation on idle assets
-    
-    Earn wallets automatically deposit balances into yield-earning opportunities from DeFi providers, earning up to 10% APY with no lock-up periods.
-    
-    ```bash
-    curl -X POST "https://api.bread.africa/wallet" \
-      -H "x-service-key: YOUR_API_KEY" \
-      -H "Content-Type: application/json" \
-      -d '{
-          "earn": true,
-          "reference": "user-123-earn-wallet"
-      }'
-    ```
-    
-    **Features:**
-    - Automatic yield farming
-    - Up to 10% APY
-    - No lock-up periods
-    - Instant withdrawals
-    - Daily yield accrual
-  </Accordion>
 </AccordionGroup>
 
 **Response Format:**
@@ -168,9 +145,8 @@ curl -X POST "https://api.bread.africa/automate" \
       "wallet_id": "68bc290df51feea8c53f5275",
       "offramp": true,
       "beneficiary_id": "68bf2eba196a18d7bd166184",
-      "sweep": false,
-      "swap": false,
-      "earn": false
+      "transfer": false,
+      "swap": false
   }'
 ```
 

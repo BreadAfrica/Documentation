@@ -32,7 +32,7 @@
         "groups": [
           {
             "group": "Getting started",
-            "pages": ["introduction", "quickstart", "currency", "asset"]
+            "pages": ["introduction", "quickstart", "currency", "asset", "webhook"]
           },
           {
             "group": "Guides",

@@ -1,0 +1,113 @@
+---
+title: "Webhook"
+description: "Real-time notifications of transaction events."
+icon: "webhook"
+---
+
+We sends webhooks to notify you about important events related to `transfers`, `deposits`, `swaps`, `onramps`, and `offramps`. You can configure webhooks in your dashboard or [via API](/api-reference/notifications/create-webhook) to receive notifications.
+
+## Webhook Events
+
+The following events are available:
+
+| Event | Description |
+|:-----------|:------------|
+| `deposit:pending` | Deposit transaction has been initiated |
+| `deposit:processing` | Deposit transaction is being processed |
+| `deposit:completed` | Deposit transaction has been completed |
+| `deposit:failed` | Deposit transaction has failed |
+| `offramp:pending` | Offramp transaction has been initiated |
+| `offramp:processing` | Offramp transaction is being processed |
+| `offramp:completed` | Offramp transaction has been completed |
+| `offramp:failed` | Offramp transaction has failed |
+| `swap:pending` | Swap transaction has been initiated |
+| `swap:processing` | Swap transaction is being processed |
+| `swap:completed` | Swap transaction has been completed |
+| `swap:failed` | Swap transaction has failed |
+| `onramp:pending` | Onramp transaction has been initiated |
+| `onramp:processing` | Onramp transaction is being processed |
+| `onramp:completed` | Onramp transaction has been completed |
+| `onramp:failed` | Onramp transaction has failed |
+| `transfer:pending` | Transfer transaction has been initiated |
+| `transfer:processing` | Transfer transaction is being processed |
+| `transfer:completed` | Transfer transaction has been completed |
+| `transfer:failed` | Transfer transaction has failed |
+
+## Webhook Verification
+
+To ensure the authenticity of webhook requests, We sign each webhook with your unique webhook secret key. You should verify the signature before processing the webhook notification received.
+
+```typescript
+import crypto from 'crypto';
+
+app.post('/your-webhook-endpoint', (req, res) => {
+  const signatureFromHeader = req.header('x-webhook-signature');
+  const yourWebhookSecret = process.env.YOUR_WEBHOOK_SECRET!;
+
+  const bodyString = JSON.stringify(req.body);
+  const computedSignature = crypto.createHmac('sha256', yourWebhookSecret).update(bodyString).digest('hex');
+
+  if (!signatureFromHeader || computedSignature !== signatureFromHeader) {
+    return res.status(401).send('Invalid webhook signature');
+  }
+
+  const { event, payload } = req.body;
+  res.status(200).send('Webhook received successfully');
+});
+```
+
+## Sample Webhook
+
+Here's an example of webhook notification for pending transfer:
+
+```json
+{
+  "event": "transfer:pending",
+  "payload": {
+    "type": "transfer",
+    "sender": "0x4022006770deec7e5cAF419D23e1C0838d278979",
+    "receiver": "0xd2218fa0F51D0d2c67868487603D44CB5CcCD228",
+    "amount": 25000,
+    "direction": "outgoing",
+    "status": "pending",
+    "fee": 0,
+    "token": "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913",
+    "blockchain": 8453,
+    "wallet": "68bb7d8399900e253084e294",
+    "user": "68bb7d8399900e253084e2h8",
+    "hash": "0xa0f7706295794b000e9486cde30fea39b93fdc575f3c12645148a88b5b7f0506",
+    "reference": "ouq7400vadmk6obkjhuooqs044aprp",
+    "asset": "base:usdc"
+  },
+  "timestamp": "1758641923078"
+}
+```
+
+## Payload Fields
+
+| Field | Type | Description |
+|:------|:-----|:------------|
+| `event` | string | The event type (e.g., "transfer:pending") |
+| `payload.type` | string | The transaction type |
+| `payload.sender` | string | The sender's wallet address |
+| `payload.receiver` | string | The receiver's wallet address |
+| `payload.amount` | number | The transaction amount |
+| `payload.direction` | string | Transaction direction ("incoming" or "outgoing") |
+| `payload.status` | string | Current transaction status |
+| `payload.fee` | number | Transaction fee |
+| `payload.token` | string | Token contract address |
+| `payload.blockchain` | number | Blockchain identifier |
+| `payload.wallet` | string | Wallet identifier |
+| `payload.user` | string | User identifier |
+| `payload.hash` | string | Transaction hash |
+| `payload.reference` | string | Unique reference for the transaction |
+| `payload.asset` | string | Asset identifier (e.g., "base:usdc") |
+| `timestamp` | string | Unix timestamp of the event |
+
+## Need Help?
+
+Our team is here to help you succeed:
+
+<Note>
+  **Need help?** Contact our team at [hello@bread.africa](mailto:hello@bread.africa) or [Twitter](https://x.com/UseBreadAfrica).
+</Note>
