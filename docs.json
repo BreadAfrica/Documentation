@@ -25,9 +25,9 @@
     "interaction": {
       "drilldown": true
     },
-    "dropdowns": [
+    "anchors": [
       {
-        "dropdown": "Documentation",
+        "anchor": "Documentation",
         "icon": "book",
         "groups": [
           {
@@ -41,8 +41,8 @@
         ]
       },
       {
-        "dropdown": "API reference",
-        "icon": "terminal",
+        "anchor": "API reference",
+        "icon": "code",
         "groups": [
           {
             "group": "API reference",
