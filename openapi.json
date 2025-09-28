@@ -3166,7 +3166,8 @@
           },
           "key": {
             "type": "string",
-            "description": "API key for the user"
+            "description": "API key for the user",
+            "example": "8F7MFnbHcIGFqfexc3Gel1yw8F7MFnbHcIGudjOe"
           },
           "webhook": {
             "$ref": "#/components/schemas/UserWebhook"
