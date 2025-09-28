@@ -3164,9 +3164,6 @@
             "description": "Whether the user account is active",
             "example": true
           },
-          "asset": {
-            "$ref": "#/components/schemas/UserAsset"
-          },
           "key": {
             "type": "string",
             "description": "API key for the user"
@@ -3204,36 +3201,6 @@
             "type": "number",
             "description": "Minimum fee amount",
             "example": 0.05
-          }
-        }
-      },
-      "UserAsset": {
-        "type": "object",
-        "properties": {
-          "code": {
-            "type": "string",
-            "description": "Asset code",
-            "example": "USDC"
-          },
-          "peg": {
-            "type": "string",
-            "description": "Asset peg currency",
-            "example": "USD"
-          },
-          "address": {
-            "type": "string",
-            "description": "Asset contract address",
-            "example": "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913"
-          },
-          "blockchain": {
-            "type": "integer",
-            "description": "Blockchain identifier",
-            "example": 8453
-          },
-          "decimals": {
-            "type": "integer",
-            "description": "Asset decimal places",
-            "example": 6
           }
         }
       },
