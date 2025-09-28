@@ -851,6 +851,87 @@
           }
         }
       }
+    },
+    "/user": {
+      "post": {
+        "tags": ["User"],
+        "summary": "Create user",
+        "description": "This endpoint allows you to create a new user account.",
+        "operationId": "createUser",
+        "security": [{"ApiKeyAuth": []}],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateUserResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["User"],
+        "summary": "Get user",
+        "description": "This endpoint allows you to retrieve user account details.",
+        "operationId": "getUser",
+        "security": [{"ApiKeyAuth": []}],
+        "responses": {
+          "200": {
+            "description": "User fetched successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUserResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/fee": {
+      "post": {
+        "tags": ["User"],
+        "summary": "Set fee",
+        "description": "This endpoint allows you to set fee configuration for account.",
+        "operationId": "setFee",
+        "security": [{"ApiKeyAuth": []}],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetFeeRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Fee set successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SetFeeResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -2873,6 +2954,339 @@
                 "type": "string",
                 "description": "Secret key for webhook verification",
                 "example": "z9o4j778vsn5ivog9beacrvld"
+              }
+            }
+          }
+        }
+      },
+      "SetFeeRequest": {
+        "type": "object",
+        "required": ["type", "value"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["percentage", "fixed"],
+            "description": "Fee type - percentage or fixed amount",
+            "example": "percentage"
+          },
+          "value": {
+            "type": "number",
+            "description": "Fee value. For percentage: 0-50%, for fixed: 0-5000",
+            "example": 0.5
+          },
+          "cap": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 5000,
+            "description": "Maximum fee cap (optional)",
+            "example": 500
+          },
+          "min": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 5000,
+            "description": "Minimum fee amount (optional)",
+            "example": 0.05
+          }
+        }
+      },
+      "SetFeeResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "status": {
+            "type": "integer",
+            "example": 200
+          },
+          "message": {
+            "type": "string",
+            "example": "Fee set successfully"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-09-28T16:49:11.472Z"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "description": "Fee type",
+                "example": "percentage"
+              },
+              "value": {
+                "type": "number",
+                "description": "Fee value",
+                "example": 0.5
+              },
+              "max": {
+                "type": "number",
+                "description": "Maximum fee amount",
+                "example": 500
+              },
+              "min": {
+                "type": "number",
+                "description": "Minimum fee amount",
+                "example": 0.05
+              }
+            }
+          }
+        }
+      },
+      "CreateUserRequest": {
+        "type": "object",
+        "required": ["email", "password", "name"],
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "User email address",
+            "example": "user@example.com"
+          },
+          "password": {
+            "type": "string",
+            "description": "User password",
+            "example": "securepassword123"
+          },
+          "name": {
+            "type": "string",
+            "description": "User full name",
+            "example": "John Doe"
+          },
+          "website": {
+            "type": "string",
+            "format": "uri",
+            "description": "User website URL (optional)",
+            "example": "https://example.com"
+          },
+          "description": {
+            "type": "string",
+            "description": "User description (optional)",
+            "example": "Brief description about your business"
+          }
+        }
+      },
+      "CreateUserResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "status": {
+            "type": "integer",
+            "example": 200
+          },
+          "message": {
+            "type": "string",
+            "example": "User created successfully"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-09-28T16:04:03.484Z"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "integer",
+                "description": "User code",
+                "example": 7827605055
+              },
+              "key": {
+                "type": "string",
+                "description": "API key for the user",
+                "example": "8F7MFnbHcIGFqfexc3Gel1yw8F7MFnbHcIGudjOe"
+              }
+            }
+          }
+        }
+      },
+      "GetUserResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "status": {
+            "type": "integer",
+            "example": 200
+          },
+          "message": {
+            "type": "string",
+            "example": "User fetched successfully"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-09-28T15:51:44.040Z"
+          },
+          "data": {
+            "$ref": "#/components/schemas/User"
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the user",
+            "example": "68bb7d8399900e253084e6f7"
+          },
+          "code": {
+            "type": "integer",
+            "description": "User code",
+            "example": 7827605055
+          },
+          "name": {
+            "type": "string",
+            "description": "User name",
+            "example": "Bread"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "User email address",
+            "example": "hello@bread.africa"
+          },
+          "fee": {
+            "$ref": "#/components/schemas/UserFee"
+          },
+          "is_active": {
+            "type": "boolean",
+            "description": "Whether the user account is active",
+            "example": true
+          },
+          "asset": {
+            "$ref": "#/components/schemas/UserAsset"
+          },
+          "key": {
+            "type": "string",
+            "description": "API key for the user"
+          },
+          "webhook": {
+            "$ref": "#/components/schemas/UserWebhook"
+          },
+          "fee_wallet": {
+            "$ref": "#/components/schemas/UserWallet"
+          },
+          "settlement_wallet": {
+            "$ref": "#/components/schemas/UserWallet"
+          }
+        }
+      },
+      "UserFee": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Fee type",
+            "example": "percentage"
+          },
+          "value": {
+            "type": "number",
+            "description": "Fee value",
+            "example": 0.5
+          },
+          "max": {
+            "type": "number",
+            "description": "Maximum fee amount",
+            "example": 1000
+          },
+          "min": {
+            "type": "number",
+            "description": "Minimum fee amount",
+            "example": 0.05
+          }
+        }
+      },
+      "UserAsset": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Asset code",
+            "example": "USDC"
+          },
+          "peg": {
+            "type": "string",
+            "description": "Asset peg currency",
+            "example": "USD"
+          },
+          "address": {
+            "type": "string",
+            "description": "Asset contract address",
+            "example": "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913"
+          },
+          "blockchain": {
+            "type": "integer",
+            "description": "Blockchain identifier",
+            "example": 8453
+          },
+          "decimals": {
+            "type": "integer",
+            "description": "Asset decimal places",
+            "example": 6
+          }
+        }
+      },
+      "UserWebhook": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "Whether webhook is enabled",
+            "example": false
+          },
+          "url": {
+            "type": "string",
+            "description": "Webhook URL",
+            "example": "https://example.com/webhook"
+          },
+          "secret": {
+            "type": "string",
+            "description": "Webhook secret key",
+            "example": "z9o4j778vsn5ivog9beUdj2849"
+          }
+        }
+      },
+      "UserWallet": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Wallet ID",
+            "example": "68bb7d8399900e3849sj8393"
+          },
+          "reference": {
+            "type": "string",
+            "description": "Wallet reference",
+            "example": "akzp20tn43bbixatfpl65zg9sqa0c2"
+          },
+          "is_active": {
+            "type": "boolean",
+            "description": "Whether the wallet is active",
+            "example": true
+          },
+          "address": {
+            "type": "object",
+            "properties": {
+              "evm": {
+                "type": "string",
+                "description": "EVM address",
+                "example": "0x214C05B7917A4dCf787b2bfA13C6bE27f0A9A250"
+              },
+              "svm": {
+                "type": "string",
+                "description": "SVM address",
+                "example": "GfC8jFidowznLTBbQWKjJkQBEbNdSyxucNsi7ydyMjdi"
               }
             }
           }
