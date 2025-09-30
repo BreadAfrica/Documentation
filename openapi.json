@@ -498,7 +498,7 @@
             "description": "The asset to get balance for",
             "schema": {
               "type": "string",
-              "enum": ["ethereum:usdc", "base:usdc", "arbitrum:usdc", "solana:usdc", "bsc:usdc", "polygon:usdc", "optimism:usdc", "avalanche:usdc", "ethereum:usdt", "arbitrum:usdt", "solana:usdt", "polygon:usdt", "bsc:usdt", "optimism:usdt", "avalanche:usdt", "base:cngn"],
+              "enum": ["ethereum:usdc", "base:usdc", "arbitrum:usdc", "solana:usdc", "bsc:usdc", "polygon:usdc", "optimism:usdc", "avalanche:usdc", "ethereum:usdt", "arbitrum:usdt", "solana:usdt", "polygon:usdt", "bsc:usdt", "optimism:usdt", "avalanche:usdt", "base:cngn", "bsc:cngn"],
               "example": "solana:usdc"
             }
           },
@@ -1159,7 +1159,7 @@
           },
           "asset": {
             "type": "string",
-            "enum": ["ethereum:usdc", "base:usdc", "arbitrum:usdc", "solana:usdc", "bsc:usdc", "polygon:usdc", "optimism:usdc", "avalanche:usdc", "ethereum:usdt", "arbitrum:usdt", "solana:usdt", "polygon:usdt", "bsc:usdt", "optimism:usdt", "avalanche:usdt", "base:cngn"],
+            "enum": ["ethereum:usdc", "base:usdc", "arbitrum:usdc", "solana:usdc", "bsc:usdc", "polygon:usdc", "optimism:usdc", "avalanche:usdc", "ethereum:usdt", "arbitrum:usdt", "solana:usdt", "polygon:usdt", "bsc:usdt", "optimism:usdt", "avalanche:usdt", "base:cngn", "bsc:cngn"],
             "description": "The asset to transfer",
             "example": "bsc:usdt"
           }
@@ -2072,13 +2072,13 @@
           },
           "from_asset": {
             "type": "string",
-            "enum": ["ethereum:usdc", "base:usdc", "arbitrum:usdc", "solana:usdc", "bsc:usdc", "polygon:usdc", "optimism:usdc", "avalanche:usdc", "ethereum:usdt", "arbitrum:usdt", "solana:usdt", "polygon:usdt", "bsc:usdt", "optimism:usdt", "avalanche:usdt", "base:cngn"],
+            "enum": ["ethereum:usdc", "base:usdc", "arbitrum:usdc", "solana:usdc", "bsc:usdc", "polygon:usdc", "optimism:usdc", "avalanche:usdc", "ethereum:usdt", "arbitrum:usdt", "solana:usdt", "polygon:usdt", "bsc:usdt", "optimism:usdt", "avalanche:usdt", "base:cngn", "bsc:cngn"],
             "description": "The asset to swap from",
             "example": "solana:usdc"
           },
           "to_asset": {
             "type": "string",
-            "enum": ["ethereum:usdc", "base:usdc", "arbitrum:usdc", "solana:usdc", "bsc:usdc", "polygon:usdc", "optimism:usdc", "avalanche:usdc", "ethereum:usdt", "arbitrum:usdt", "solana:usdt", "polygon:usdt", "bsc:usdt", "optimism:usdt", "avalanche:usdt", "base:cngn"],
+            "enum": ["ethereum:usdc", "base:usdc", "arbitrum:usdc", "solana:usdc", "bsc:usdc", "polygon:usdc", "optimism:usdc", "avalanche:usdc", "ethereum:usdt", "arbitrum:usdt", "solana:usdt", "polygon:usdt", "bsc:usdt", "optimism:usdt", "avalanche:usdt", "base:cngn", "bsc:cngn"],
             "description": "The asset to swap to",
             "example": "base:usdc"
           }
@@ -2110,13 +2110,13 @@
           },
           "from_asset": {
             "type": "string",
-            "enum": ["ethereum:usdc", "base:usdc", "arbitrum:usdc", "solana:usdc", "bsc:usdc", "polygon:usdc", "optimism:usdc", "avalanche:usdc", "ethereum:usdt", "arbitrum:usdt", "solana:usdt", "polygon:usdt", "bsc:usdt", "optimism:usdt", "avalanche:usdt", "base:cngn"],
+            "enum": ["ethereum:usdc", "base:usdc", "arbitrum:usdc", "solana:usdc", "bsc:usdc", "polygon:usdc", "optimism:usdc", "avalanche:usdc", "ethereum:usdt", "arbitrum:usdt", "solana:usdt", "polygon:usdt", "bsc:usdt", "optimism:usdt", "avalanche:usdt", "base:cngn", "bsc:cngn"],
             "description": "The asset to swap from",
             "example": "solana:usdc"
           },
           "to_asset": {
             "type": "string",
-            "enum": ["ethereum:usdc", "base:usdc", "arbitrum:usdc", "solana:usdc", "bsc:usdc", "polygon:usdc", "optimism:usdc", "avalanche:usdc", "ethereum:usdt", "arbitrum:usdt", "solana:usdt", "polygon:usdt", "bsc:usdt", "optimism:usdt", "avalanche:usdt", "base:cngn"],
+            "enum": ["ethereum:usdc", "base:usdc", "arbitrum:usdc", "solana:usdc", "bsc:usdc", "polygon:usdc", "optimism:usdc", "avalanche:usdc", "ethereum:usdt", "arbitrum:usdt", "solana:usdt", "polygon:usdt", "bsc:usdt", "optimism:usdt", "avalanche:usdt", "base:cngn", "bsc:cngn"],
             "description": "The asset to swap to",
             "example": "base:usdc"
           }
@@ -2243,9 +2243,15 @@
           },
           "asset": {
             "type": "string",
-            "enum": ["ethereum:usdc", "base:usdc", "arbitrum:usdc", "solana:usdc", "bsc:usdc", "polygon:usdc", "optimism:usdc", "avalanche:usdc", "ethereum:usdt", "arbitrum:usdt", "solana:usdt", "polygon:usdt", "bsc:usdt", "optimism:usdt", "avalanche:usdt", "base:cngn"],
+            "enum": ["ethereum:usdc", "base:usdc", "arbitrum:usdc", "solana:usdc", "bsc:usdc", "polygon:usdc", "optimism:usdc", "avalanche:usdc", "ethereum:usdt", "arbitrum:usdt", "solana:usdt", "polygon:usdt", "bsc:usdt", "optimism:usdt", "avalanche:usdt", "base:cngn", "bsc:cngn"],
             "description": "The crypto asset to offramp from",
             "example": "base:usdc"
+          },
+          "is_exact_output": {
+            "type": "boolean",
+            "description": "Whether the amount specified is the exact output amount in fiat currency",
+            "default": false,
+            "example": false
           }
         }
       },
@@ -2266,9 +2272,15 @@
           },
           "asset": {
             "type": "string",
-            "enum": ["ethereum:usdc", "base:usdc", "arbitrum:usdc", "solana:usdc", "bsc:usdc", "polygon:usdc", "optimism:usdc", "avalanche:usdc", "ethereum:usdt", "arbitrum:usdt", "solana:usdt", "polygon:usdt", "bsc:usdt", "optimism:usdt", "avalanche:usdt", "base:cngn"],
+            "enum": ["ethereum:usdc", "base:usdc", "arbitrum:usdc", "solana:usdc", "bsc:usdc", "polygon:usdc", "optimism:usdc", "avalanche:usdc", "ethereum:usdt", "arbitrum:usdt", "solana:usdt", "polygon:usdt", "bsc:usdt", "optimism:usdt", "avalanche:usdt", "base:cngn", "bsc:cngn"],
             "description": "The crypto asset to receive after onramp",
             "example": "base:usdc"
+          },
+          "is_exact_output": {
+            "type": "boolean",
+            "description": "Whether the amount specified is the exact output amount in crypto asset",
+            "default": false,
+            "example": false
           }
         }
       },
@@ -2419,7 +2431,7 @@
           },
           "asset": {
             "type": "string",
-            "enum": ["ethereum:usdc", "base:usdc", "arbitrum:usdc", "solana:usdc", "bsc:usdc", "polygon:usdc", "optimism:usdc", "avalanche:usdc", "ethereum:usdt", "arbitrum:usdt", "solana:usdt", "polygon:usdt", "bsc:usdt", "optimism:usdt", "avalanche:usdt", "base:cngn"],
+            "enum": ["ethereum:usdc", "base:usdc", "arbitrum:usdc", "solana:usdc", "bsc:usdc", "polygon:usdc", "optimism:usdc", "avalanche:usdc", "ethereum:usdt", "arbitrum:usdt", "solana:usdt", "polygon:usdt", "bsc:usdt", "optimism:usdt", "avalanche:usdt", "base:cngn", "bsc:cngn"],
             "description": "The asset to offramp",
             "example": "base:usdc"
           }
