@@ -858,7 +858,6 @@
         "summary": "Create user",
         "description": "This endpoint allows you to create a new user account.",
         "operationId": "createUser",
-        "security": [{"ApiKeyAuth": []}],
         "requestBody": {
           "required": true,
           "content": {
